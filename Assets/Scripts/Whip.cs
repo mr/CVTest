@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections;
 
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(MeshRenderer))]
@@ -7,6 +8,9 @@ public class Whip : MonoBehaviour {
 
     BoxCollider2D boxCollider;
     MeshRenderer meshRenderer;
+
+    public float timeToStartWhip = 0.2f;
+    public float timeToWhip = 0.3f;
 
     public enum Direction {
         Left, Right
@@ -23,6 +27,30 @@ public class Whip : MonoBehaviour {
         }
     }
 
+    bool whipping = false;
+    public bool Whipping {
+        protected set {
+            whipping = value;
+        }
+
+        get {
+            return whipping;
+        }
+    }
+
+    bool whipOut = false;
+    bool WhipOut {
+        set {
+            boxCollider.enabled = value;
+            meshRenderer.enabled = value;
+            whipOut = value;
+        }
+
+        get {
+            return whipOut;
+        }
+    }
+
     // Use this for initialization
     void Start() {
         boxCollider = GetComponent<BoxCollider2D>();
@@ -35,10 +63,24 @@ public class Whip : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (Input.GetKeyDown(KeyCode.Z)) {
-            boxCollider.enabled = !boxCollider.enabled;
-            meshRenderer.enabled = !meshRenderer.enabled;
+            if (!WhipOut) {
+                StartCoroutine("WhipInTime");
+            }
         }
+    }
 
-        Debug.Log(transform.position);
+    IEnumerator WhipInTime() {
+        Whipping = true;
+
+        yield return new WaitForSeconds(timeToStartWhip);
+
+        WhipOut = true;
+
+        yield return new WaitForSeconds(timeToWhip);
+
+        Whipping = false;
+        WhipOut = false;
+
+        yield return null;
     }
 }

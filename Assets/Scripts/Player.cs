@@ -60,6 +60,10 @@ public class Player : MonoBehaviour {
             velocity.x = 0;
         }
 
+        if (whip.Whipping && controller.collisions.below) {
+            velocity.x = 0;
+        }
+
         controller.Move(velocity * Time.deltaTime, directionalInput);
 
         if (controller.collisions.above || controller.collisions.below) {
