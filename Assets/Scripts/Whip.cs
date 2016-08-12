@@ -14,16 +14,12 @@ public class Whip : MonoBehaviour {
 
     public Direction WhipDirection {
         set {
-            var x = transform.localPosition.x;
+            var x = Math.Abs(transform.localPosition.x);
             var y = transform.localPosition.y;
-            switch (value) {
-                case Direction.Left:
-                    transform.localPosition = new Vector3(-Math.Abs(x), y, 0);
-                    break;
-                case Direction.Right:
-                    transform.localPosition = new Vector3(Math.Abs(x), y, 0);
-                    break;
+            if (value == Direction.Left) {
+                x = -x;
             }
+            transform.localPosition = new Vector3(x, y, 0);
         }
     }
 
