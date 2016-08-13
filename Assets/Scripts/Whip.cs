@@ -67,10 +67,6 @@ public class Whip : MonoBehaviour {
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log("Whip");
-    }
-
     IEnumerator WhipInTime() {
         Whipping = true;
 

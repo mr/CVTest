@@ -1,3 +1,0 @@
-﻿interface Whippable {
-    void Whip();
-}

@@ -3,17 +3,13 @@ using System.Collections;
 
 [RequireComponent(typeof(Controller2D))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class Skellington : MonoBehaviour, Whippable {
+public class Skellington : MonoBehaviour {
 
     Controller2D controller;
     Rigidbody2D rigidBody;
 
     float gravity = -1f;
     Vector3 velocity;
-
-    public void Whip() {
-        Destroy(gameObject);
-    }
 
     void Start() {
         controller = GetComponent<Controller2D>();
@@ -29,6 +25,9 @@ public class Skellington : MonoBehaviour, Whippable {
     }
 
     void OnTriggerEnter2D(Collider2D collider) {
-        Debug.Log("Skellington");
+        if (collider.gameObject.name == "Whip") {
+            Debug.Log("Suicide");
+            Destroy(gameObject);
+        }
     }
 }
