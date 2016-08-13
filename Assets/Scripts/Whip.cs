@@ -51,7 +51,6 @@ public class Whip : MonoBehaviour {
         }
     }
 
-    // Use this for initialization
     void Start() {
         boxCollider = GetComponent<BoxCollider2D>();
         boxCollider.enabled = false;
@@ -60,13 +59,16 @@ public class Whip : MonoBehaviour {
         meshRenderer.enabled = false;
     }
 
-    // Update is called once per frame
     void Update() {
         if (Input.GetKeyDown(KeyCode.Z)) {
             if (!WhipOut) {
                 StartCoroutine("WhipInTime");
             }
         }
+    }
+
+    void OnTriggerEnter2D(Collider2D other) {
+        Debug.Log("Whip");
     }
 
     IEnumerator WhipInTime() {
