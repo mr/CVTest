@@ -10,7 +10,7 @@ public class Skellington : MonoBehaviour {
     Controller2D controller;
     Rigidbody2D rigidBody;
 
-    float gravity = -1f;
+    public float gravity = -1f;
     Vector3 velocity;
 
     float travelDistance = 0;
@@ -25,7 +25,7 @@ public class Skellington : MonoBehaviour {
         velocity.y += gravity * Time.deltaTime;
 
         var startX = transform.localPosition.x;
-        controller.Move(velocity);
+        controller.Move(velocity * Time.deltaTime);
         var endX = transform.localPosition.x;
 
         travelDistance += Mathf.Abs(startX - endX);
