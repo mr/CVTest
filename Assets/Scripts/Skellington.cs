@@ -5,20 +5,31 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Skellington : MonoBehaviour {
 
+    public float moveSpeed = 2;
+
     Controller2D controller;
     Rigidbody2D rigidBody;
 
     float gravity = -1f;
     Vector3 velocity;
 
+    float travelDistance = 0;
+
     void Start() {
         controller = GetComponent<Controller2D>();
         rigidBody = GetComponent<Rigidbody2D>();
+        velocity.x = moveSpeed;
     }
 
     void Update() {
         velocity.y += gravity * Time.deltaTime;
+
+        var startX = transform.localPosition.x;
         controller.Move(velocity);
+        var endX = transform.localPosition.x;
+
+        travelDistance += Mathf.Abs(startX - endX);
+
         if (controller.collisions.above || controller.collisions.below) {
             velocity.y = 0;
         }
