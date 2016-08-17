@@ -42,6 +42,7 @@ public class Player : MonoBehaviour {
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
+        GameManager.Instance.PlayerGravity = gravity;
     }
 
     void EarlyUpdate() {

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
@@ -19,5 +18,11 @@ public class GameManager : MonoBehaviour {
 
     void Update () {
 
+    }
+
+    public static GameManager Instance {
+        get {
+            return GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        }
     }
 }

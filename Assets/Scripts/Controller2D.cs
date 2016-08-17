@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Controller2D : RaycastController {
 
@@ -59,6 +58,14 @@ public class Controller2D : RaycastController {
             RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
 
             Debug.DrawRay(rayOrigin, Vector2.right * directionX, Color.red);
+
+            if (i == 0) {
+                RaycastHit2D belowHit = Physics2D.Raycast(rayOrigin, Vector2.down, rayLength, collisionMask);
+                if (!belowHit) {
+                    collisions.leftEdge = directionX == -1;
+                    collisions.rightEdge = directionX == 1;
+                }
+            }
 
             if (hit) {
 
@@ -196,6 +203,7 @@ public class Controller2D : RaycastController {
     public struct CollisionInfo {
         public bool above, below;
         public bool left, right;
+        public bool leftEdge, rightEdge;
 
         public bool climbingSlope;
         public bool descendingSlope;
@@ -207,6 +215,7 @@ public class Controller2D : RaycastController {
         public void Reset() {
             above = below = false;
             left = right = false;
+            leftEdge = rightEdge = false;
             climbingSlope = false;
             descendingSlope = false;
 
