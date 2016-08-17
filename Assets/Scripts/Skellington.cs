@@ -44,9 +44,6 @@ public class Skellington : MonoBehaviour {
         if (controller.collisions.left || controller.collisions.leftEdge) {
             moveSpeed = Mathf.Abs(moveSpeed);
         }
-
-        Debug.Log("LE " + controller.collisions.leftEdge);
-        Debug.Log("RE " + controller.collisions.rightEdge);
     }
 
     IEnumerator TurnAround() {
