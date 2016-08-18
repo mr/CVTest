@@ -18,6 +18,7 @@ public class Bone : MonoBehaviour {
 
     void Start () {
         velocity = (Vector2.up + (direction ? Vector2.left : Vector2.right)) * throwMagnitude;
+        StartCoroutine(Suicide());
     }
 
     void Update () {
