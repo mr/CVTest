@@ -61,7 +61,7 @@ public class Whip : MonoBehaviour {
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Z)) {
-            if (!WhipOut) {
+            if (!Whipping) {
                 StartCoroutine("WhipInTime");
             }
         }
