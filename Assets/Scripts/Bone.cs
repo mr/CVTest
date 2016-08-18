@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class Bone : MonoBehaviour {
 
@@ -6,13 +7,28 @@ public class Bone : MonoBehaviour {
     private Vector2 velocity;
     public float throwMagnitude;
 
+    private bool direction;
+    public bool Direction {
+        set {
+            direction = value;
+        }
+    }
+
+    public float lifeTime = 5f;
+
     void Start () {
-        velocity = (Vector2.up + Vector2.left) * throwMagnitude;
+        velocity = (Vector2.up + (direction ? Vector2.left : Vector2.right)) * throwMagnitude;
     }
 
     void Update () {
         velocity.y += gravity * Time.deltaTime;
         transform.Translate(velocity * Time.deltaTime);
+    }
+
+    IEnumerator Suicide() {
+        yield return new WaitForSeconds(lifeTime);
+        Destroy(gameObject);
+        yield return null;
     }
 
     void OnTriggerEnter2D(Collider2D collider) {

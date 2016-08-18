@@ -7,20 +7,26 @@ public class Skellington : MonoBehaviour {
 
     public float moveSpeed = 2;
 
-    Controller2D controller;
-    Rigidbody2D rigidBody;
+    public Bone bone;
 
+    Controller2D controller;
     private float gravity = 0f;
     Vector3 velocity;
 
     public float turnAroundWaitTime = 1f;
     public float turnAroundChance = 0.2f;
 
+    public float boneThrowWaitTime = 1f;
+    public float boneThrowChance = 0.2f;
+    public float boneThrowPauseTime = 0.2f;
+
+    private bool throwing;
+
     void Start() {
         controller = GetComponent<Controller2D>();
-        rigidBody = GetComponent<Rigidbody2D>();
         velocity.x = moveSpeed;
         StartCoroutine(TurnAround());
+        StartCoroutine(ThrowBones());
     }
 
     void Update() {
@@ -28,7 +34,11 @@ public class Skellington : MonoBehaviour {
             gravity = GameManager.Instance.PlayerGravity;
         }
 
-        velocity.x = moveSpeed;
+        if (throwing) {
+            velocity.x = 0;
+        } else {
+            velocity.x = moveSpeed;
+        }
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
@@ -43,6 +53,19 @@ public class Skellington : MonoBehaviour {
 
         if (controller.collisions.left || controller.collisions.leftEdge) {
             moveSpeed = Mathf.Abs(moveSpeed);
+        }
+    }
+
+    IEnumerator ThrowBones() {
+        for (;;) {
+            yield return new WaitForSeconds(boneThrowWaitTime);
+            if (Random.value <= boneThrowChance) {
+                throwing = true;
+                yield return new WaitForSeconds(boneThrowPauseTime);
+                Bone thrown = Instantiate(bone, transform.position, transform.rotation) as Bone;
+                thrown.Direction = Mathf.Sign(moveSpeed) == -1;
+                throwing = false;
+            }
         }
     }
 
