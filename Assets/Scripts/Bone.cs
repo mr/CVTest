@@ -10,7 +10,6 @@ public class Bone : MonoBehaviour {
         velocity = (Vector2.up + Vector2.left) * throwMagnitude;
     }
 
-    // Update is called once per frame
     void Update () {
         velocity.y += gravity * Time.deltaTime;
         transform.Translate(velocity * Time.deltaTime);
