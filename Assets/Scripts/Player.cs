@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
+
+using Enums;
 
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour {
@@ -14,6 +15,22 @@ public class Player : MonoBehaviour {
     bool wasOnGround = false;
     bool jumped = false;
     bool falling = false;
+
+    int numOnStairs = 0;
+    bool onStairs {
+        get {
+            return numOnStairs > 0;
+        }
+
+        set {
+            if (value) {
+                numOnStairs++;
+            } else {
+                numOnStairs--;
+            }
+        }
+    }
+    Stairs.Grade stairGrade;
 
     public Vector2 wallJumpClimb;
     public Vector2 wallJumpOff;
@@ -32,6 +49,27 @@ public class Player : MonoBehaviour {
     Controller2D controller;
 
     Vector2 directionalInput;
+    public Vector2 DirectionalInput {
+        set {
+            if (value.x < 0) {
+                whip.WhipDirection = Direction.Left;
+            } else if (value.x > 0) {
+                whip.WhipDirection = Direction.Right;
+            }
+
+            if (controller.collisions.below) {
+                directionalInput = value;
+            }
+        }
+    }
+
+    Vector2 stairDirectionalInput;
+    public Vector2 StairDirectionalInput {
+        set {
+            stairDirectionalInput = value;
+        }
+    }
+
     bool wallSliding;
     int wallDirX;
 
@@ -50,12 +88,24 @@ public class Player : MonoBehaviour {
             jumped = false;
             falling = false;
         }
+        CalculateVelocity();
     }
 
     void Update() {
         EarlyUpdate();
 
-        CalculateVelocity();
+        if (controller.collisions.below && onStairs) {
+            Debug.Log("On Stairs");
+            velocity.x = stairDirectionalInput.x * moveSpeed;
+            velocity.y = moveSpeed;
+            if (stairGrade == Stairs.Grade.Down) {
+                velocity.y *= -1;
+            }
+
+            if (velocity.x == 0) {
+                velocity.y = 0;
+            }
+        }
 
         if (falling) {
             velocity.x = 0;
@@ -78,18 +128,6 @@ public class Player : MonoBehaviour {
 
     void LateUpdate() {
         wasOnGround = controller.collisions.below;
-    }
-
-    public void SetDirectionalInput(Vector2 input) {
-        if (input.x < 0) {
-            whip.WhipDirection = Whip.Direction.Left;
-        } else if (input.x > 0) {
-            whip.WhipDirection = Whip.Direction.Right;
-        }
-
-        if (controller.collisions.below) {
-            directionalInput = input;
-        }
     }
 
     public void OnJumpInputDown() {
@@ -116,7 +154,6 @@ public class Player : MonoBehaviour {
             velocity.y = minJumpVelocity;
         }
     }
-
 
     void HandleWallSliding() {
         wallDirX = (controller.collisions.left) ? -1 : 1;
@@ -148,5 +185,20 @@ public class Player : MonoBehaviour {
     void CalculateVelocity() {
         velocity.x = directionalInput.x * moveSpeed;
         velocity.y += gravity * Time.deltaTime;
+    }
+
+    void OnTriggerEnter2D(Collider2D collider) {
+        if (collider.gameObject.tag == Stairs.TAG) {
+            Debug.Log("Stairs Enter");
+            stairGrade = collider.gameObject.GetComponent<Stairs>().grade;
+            onStairs = true;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collider) {
+        if (collider.gameObject.tag == Stairs.TAG) {
+            Debug.Log("Stairs Exit");
+            onStairs = false;
+        }
     }
 }

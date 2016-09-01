@@ -1,14 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using Enums;
+
 public class Bone : MonoBehaviour {
 
     public float gravity;
     private Vector2 velocity;
     public float throwMagnitude;
 
-    private bool direction;
-    public bool Direction {
+    public static Object prefab = Resources.Load("Prefabs/Bone");
+    public static GameObject Create(Direction direction, Vector2 position, Quaternion rotation) {
+        var gameObject = Instantiate(prefab, position, rotation) as GameObject;
+        var newBone = gameObject.GetComponent<Bone>();
+        newBone.Direction = direction;
+        return gameObject;
+    }
+
+    private Direction direction;
+    public Direction Direction {
         set {
             direction = value;
         }
@@ -17,7 +27,8 @@ public class Bone : MonoBehaviour {
     public float lifeTime = 5f;
 
     void Start () {
-        velocity = (Vector2.up + (direction ? Vector2.left : Vector2.right)) * throwMagnitude;
+        var throwDir = Util.DirectionToVector2(direction);
+        velocity = (Vector2.up + throwDir) * throwMagnitude;
         StartCoroutine(Suicide());
     }
 
@@ -33,15 +44,7 @@ public class Bone : MonoBehaviour {
     }
 
     void OnTriggerEnter2D(Collider2D collider) {
-        Debug.Log("Trigger");
         if (collider.gameObject.tag == "Player") {
-            Destroy(gameObject);
-        }
-    }
-
-    void OnCollisionEnter2D(Collision2D collision) {
-        Debug.Log("Collision");
-        if (collision.gameObject.tag == "Player") {
             Destroy(gameObject);
         }
     }

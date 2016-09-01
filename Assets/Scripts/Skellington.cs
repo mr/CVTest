@@ -20,7 +20,14 @@ public class Skellington : MonoBehaviour {
     public float boneThrowChance = 0.2f;
     public float boneThrowPauseTime = 0.2f;
 
+    public int boneThrowMaxWaitTime = 5;
+
     private bool throwing;
+    private GameObject player;
+
+    void Awake() {
+        player = GameObject.FindGameObjectWithTag("Player");
+    }
 
     void Start() {
         controller = GetComponent<Controller2D>();
@@ -57,14 +64,21 @@ public class Skellington : MonoBehaviour {
     }
 
     IEnumerator ThrowBones() {
+        int timesWaited = 0;
         for (;;) {
             yield return new WaitForSeconds(boneThrowWaitTime);
-            if (Random.value <= boneThrowChance) {
+            if (Random.value <= boneThrowChance || timesWaited == boneThrowMaxWaitTime) {
+                timesWaited = 0;
                 throwing = true;
                 yield return new WaitForSeconds(boneThrowPauseTime);
-                Bone thrown = Instantiate(bone, transform.position, transform.rotation) as Bone;
-                thrown.Direction = Mathf.Sign(moveSpeed) == -1;
+                Bone.Create(
+                    Util.DirectionOf(of: player, relativeTo: gameObject),
+                    transform.position,
+                    transform.rotation
+                );
                 throwing = false;
+            } else {
+                timesWaited++;
             }
         }
     }

@@ -2,6 +2,8 @@
 using System;
 using System.Collections;
 
+using Enums;
+
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(MeshRenderer))]
 public class Whip : MonoBehaviour {
@@ -11,10 +13,6 @@ public class Whip : MonoBehaviour {
 
     public float timeToStartWhip = 0.2f;
     public float timeToWhip = 0.3f;
-
-    public enum Direction {
-        Left, Right
-    }
 
     public Direction WhipDirection {
         set {
