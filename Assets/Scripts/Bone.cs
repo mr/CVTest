@@ -9,8 +9,8 @@ public class Bone : MonoBehaviour {
     private Vector2 velocity;
     public float throwMagnitude;
 
-    public static Object prefab = Resources.Load("Prefabs/Bone");
     public static GameObject Create(Direction direction, Vector2 position, Quaternion rotation) {
+        var prefab = Resources.Load("Prefabs/Bone");
         var gameObject = Instantiate(prefab, position, rotation) as GameObject;
         var newBone = gameObject.GetComponent<Bone>();
         newBone.Direction = direction;

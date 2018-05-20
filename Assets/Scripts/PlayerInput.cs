@@ -14,9 +14,9 @@ public class PlayerInput : MonoBehaviour {
         var directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         player.DirectionalInput = directionalInput;
 
-        if (Input.GetKeyDown(KeyCode.A)) {
+        if (Input.GetKey(KeyCode.A)) {
             player.StairDirectionalInput = Vector2.left;
-        } else if (Input.GetKeyDown(KeyCode.S)) {
+        } else if (Input.GetKey(KeyCode.S)) {
             player.StairDirectionalInput = Vector2.right;
         } else {
             player.StairDirectionalInput = Vector2.zero;

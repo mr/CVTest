@@ -15,6 +15,7 @@ public class Player : MonoBehaviour {
     bool wasOnGround = false;
     bool jumped = false;
     bool falling = false;
+    bool climbingStairs = false;
 
     int numOnStairs = 0;
     bool onStairs {
@@ -88,22 +89,18 @@ public class Player : MonoBehaviour {
             jumped = false;
             falling = false;
         }
+        climbingStairs = onStairs && stairDirectionalInput.x != 0;
         CalculateVelocity();
     }
 
     void Update() {
         EarlyUpdate();
 
-        if (controller.collisions.below && onStairs) {
+        if (climbingStairs) {
             Debug.Log("On Stairs");
-            velocity.x = stairDirectionalInput.x * moveSpeed;
-            velocity.y = moveSpeed;
+            velocity.x = velocity.y = stairDirectionalInput.x * moveSpeed;
             if (stairGrade == Stairs.Grade.Down) {
                 velocity.y *= -1;
-            }
-
-            if (velocity.x == 0) {
-                velocity.y = 0;
             }
         }
 
@@ -115,13 +112,14 @@ public class Player : MonoBehaviour {
             velocity.x = 0;
         }
 
+        Debug.Log("Velocity: {x: " + velocity.x + ", y: " + velocity.y + "}");
         controller.Move(velocity * Time.deltaTime, directionalInput);
 
         if (controller.collisions.above || controller.collisions.below) {
             velocity.y = 0;
         }
 
-        if (!jumped && wasOnGround && !controller.collisions.below) {
+        if (!jumped && wasOnGround && !controller.collisions.below && !onStairs) {
             falling = true;
         }
     }
