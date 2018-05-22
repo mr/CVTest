@@ -58,10 +58,11 @@ public class Player : MonoBehaviour {
                 whip.WhipDirection = Direction.Right;
             }
 
-            if (controller.collisions.below) {
+            if (controller.collisions.below || onStairs) {
                 directionalInput = value;
             }
         }
+        get { return directionalInput; }
     }
 
     Vector2 stairDirectionalInput;
@@ -102,6 +103,8 @@ public class Player : MonoBehaviour {
             if (stairGrade == Stairs.Grade.Down) {
                 velocity.y *= -1;
             }
+        } else if (onStairs) {
+            velocity.y = 0;
         }
 
         if (falling) {
