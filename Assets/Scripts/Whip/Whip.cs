@@ -25,19 +25,11 @@ public class Whip : MonoBehaviour {
         }
     }
 
-    bool whipping = false;
-    public bool Whipping {
-        protected set {
-            whipping = value;
-        }
-
-        get {
-            return whipping;
-        }
-    }
+    [HideInInspector]
+    public bool whipping = false;
 
     bool whipOut = false;
-    bool WhipOut {
+    public bool WhipOut {
         set {
             boxCollider.enabled = value;
             meshRenderer.enabled = value;
@@ -58,15 +50,15 @@ public class Whip : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Z)) {
-            if (!Whipping) {
-                StartCoroutine("WhipInTime");
-            }
-        }
+        // if (Input.GetKeyDown(KeyCode.Z)) {
+        //     if (!whipping) {
+        //         StartCoroutine(WhipInTime());
+        //     }
+        // }
     }
 
     IEnumerator WhipInTime() {
-        Whipping = true;
+        whipping = true;
 
         yield return new WaitForSeconds(timeToStartWhip);
 
@@ -74,7 +66,7 @@ public class Whip : MonoBehaviour {
 
         yield return new WaitForSeconds(timeToWhip);
 
-        Whipping = false;
+        whipping = false;
         WhipOut = false;
 
         yield return null;

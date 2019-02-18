@@ -111,11 +111,10 @@ public class Player : MonoBehaviour {
             velocity.x = 0;
         }
 
-        if (whip.Whipping && controller.collisions.below) {
+        if (whip.whipping && controller.collisions.below) {
             velocity.x = 0;
         }
 
-        Debug.Log("Velocity: {x: " + velocity.x + ", y: " + velocity.y + "}");
         controller.Move(velocity * Time.deltaTime, directionalInput);
 
         if (controller.collisions.above || controller.collisions.below) {
