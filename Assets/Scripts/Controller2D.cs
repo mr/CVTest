@@ -9,20 +9,30 @@ public class Controller2D : RaycastController {
     [HideInInspector]
     public Vector2 playerInput;
 
+    bool climbingStairs = false;
+    LayerMask CollisionMask {
+        get {
+            return climbingStairs
+                ? climbingStairsCollisionMask
+                : collisionMask;
+        }
+    }
+
     public override void Start() {
         base.Start();
         collisions.faceDir = 1;
     }
 
-    public void Move(Vector2 moveAmount, bool standingOnPlatform = false) {
-        Move(moveAmount, Vector2.zero, standingOnPlatform);
+    public void Move(Vector2 moveAmount, bool standingOnPlatform = false, bool climbingStairs = false) {
+        Move(moveAmount, Vector2.zero, standingOnPlatform, climbingStairs);
     }
 
-    public void Move(Vector2 moveAmount, Vector2 input, bool standingOnPlatform = false) {
+    public void Move(Vector2 moveAmount, Vector2 input, bool standingOnPlatform = false, bool climbingStairs = false) {
         UpdateRaycastOrigins();
         collisions.Reset();
         collisions.moveAmountOld = moveAmount;
         playerInput = input;
+        this.climbingStairs = climbingStairs;
 
         if (moveAmount.x != 0) {
             collisions.faceDir = (int)Mathf.Sign(moveAmount.x);
@@ -55,12 +65,12 @@ public class Controller2D : RaycastController {
         for (int i = 0; i < horizontalRayCount; i++) {
             Vector2 rayOrigin = (directionX == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
             rayOrigin += Vector2.up * (horizontalRaySpacing * i);
-            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, CollisionMask);
 
             Debug.DrawRay(rayOrigin, Vector2.right * directionX, Color.red);
 
             if (i == 0) {
-                RaycastHit2D belowHit = Physics2D.Raycast(rayOrigin, Vector2.down, rayLength, collisionMask);
+                RaycastHit2D belowHit = Physics2D.Raycast(rayOrigin, Vector2.down, rayLength, CollisionMask);
                 if (!belowHit) {
                     collisions.leftEdge = directionX == -1;
                     collisions.rightEdge = directionX == 1;
@@ -112,7 +122,7 @@ public class Controller2D : RaycastController {
 
             Vector2 rayOrigin = (directionY == -1) ? raycastOrigins.bottomLeft : raycastOrigins.topLeft;
             rayOrigin += Vector2.right * (verticalRaySpacing * i + moveAmount.x);
-            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, collisionMask);
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, CollisionMask);
 
             Debug.DrawRay(rayOrigin, Vector2.up * directionY, Color.red);
 
@@ -147,7 +157,7 @@ public class Controller2D : RaycastController {
             float directionX = Mathf.Sign(moveAmount.x);
             rayLength = Mathf.Abs(moveAmount.x) + skinWidth;
             Vector2 rayOrigin = ((directionX == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight) + Vector2.up * moveAmount.y;
-            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, CollisionMask);
 
             if (hit) {
                 float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
@@ -175,7 +185,7 @@ public class Controller2D : RaycastController {
     void DescendSlope(ref Vector2 moveAmount) {
         float directionX = Mathf.Sign(moveAmount.x);
         Vector2 rayOrigin = (directionX == -1) ? raycastOrigins.bottomRight : raycastOrigins.bottomLeft;
-        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, -Vector2.up, Mathf.Infinity, collisionMask);
+        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, -Vector2.up, Mathf.Infinity, CollisionMask);
 
         if (hit) {
             float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);

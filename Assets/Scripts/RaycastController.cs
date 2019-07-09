@@ -5,6 +5,7 @@ using System.Collections;
 public class RaycastController : MonoBehaviour {
 
     public LayerMask collisionMask;
+    public LayerMask climbingStairsCollisionMask;
 
     public const float skinWidth = .015f;
     const float dstBetweenRays = .15f;

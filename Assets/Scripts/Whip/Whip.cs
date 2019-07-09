@@ -41,6 +41,12 @@ public class Whip : MonoBehaviour {
         }
     }
 
+    public void DoWhip() {
+        if (!whipping) {
+            StartCoroutine(WhipInTime());
+        }
+    }
+
     void Start() {
         boxCollider = GetComponent<BoxCollider2D>();
         boxCollider.enabled = false;
@@ -50,11 +56,6 @@ public class Whip : MonoBehaviour {
     }
 
     void Update() {
-        // if (Input.GetKeyDown(KeyCode.Z)) {
-        //     if (!whipping) {
-        //         StartCoroutine(WhipInTime());
-        //     }
-        // }
     }
 
     IEnumerator WhipInTime() {

@@ -8,6 +8,8 @@ public class Stairs : MonoBehaviour {
         Up, Down
     }
 
+    public bool end = false;
+
     public Grade grade;
 
     // Use this for initialization
