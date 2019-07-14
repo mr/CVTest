@@ -1,24 +1,25 @@
 ﻿using UnityEngine;
-
 using Enums;
+using System.Collections.Generic;
+using System.Linq;
 
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour {
+
+    public LayerMask stairMask;
 
     public float maxJumpHeight = 4;
     public float minJumpHeight = 1;
     public float timeToJumpApex = .4f;
     public float moveSpeed = 6;
 
-    float accelerationTimeAirborne = .2f;
-    float accelerationTimeGrounded = .1f;
     bool wasOnGround = false;
     bool jumped = false;
     bool falling = false;
     bool climbingStairs = false;
 
     int numOnStairs = 0;
-    bool onStairs {
+    bool touchingStairs {
         get {
             return numOnStairs > 0;
         }
@@ -31,16 +32,6 @@ public class Player : MonoBehaviour {
     void removeStairs() {
         numOnStairs--;
     }
-
-    Stairs.Grade stairGrade;
-
-    public Vector2 wallJumpClimb;
-    public Vector2 wallJumpOff;
-    public Vector2 wallLeap;
-
-    public float wallSlideSpeedMax = 3;
-    public float wallStickTime = .25f;
-    float timeToWallUnstick;
 
     float gravity;
     float maxJumpVelocity;
@@ -61,7 +52,7 @@ public class Player : MonoBehaviour {
                 whip.WhipDirection = Direction.Right;
             }
 
-            if (controller.collisions.below || onStairs) {
+            if (controller.collisions.below || touchingStairs) {
                 directionalInput = value;
             }
         }
@@ -70,9 +61,9 @@ public class Player : MonoBehaviour {
 
     Vector2 stairDirectionalInput;
 
-    Stairs stairStartLocation = null;
-    // This might be the same as the start!
-    Stairs stairEndLocation = null;
+    Stairs stairStart = null;
+    // This contains the start!
+    HashSet<Stairs> stairEnds = new HashSet<Stairs>();
 
     StairLerpState? stairLerpState = null;
     struct StairLerpState {
@@ -88,8 +79,6 @@ public class Player : MonoBehaviour {
             this.end = end;
         }
     }
-
-    int wallDirX;
 
     public Whip whip;
 
@@ -111,20 +100,20 @@ public class Player : MonoBehaviour {
         }
 
         if (!climbingStairs) {
-            climbingStairs = onStairs && stairDirectionalInput.x != 0 && controller.collisions.below;
+            climbingStairs = touchingStairs
+                && stairDirectionalInput.x != 0
+                && stairStart != null
+                && stairStart.allowedToClimb(getPlayerBottom(), stairDirectionalInput)
+                && controller.collisions.below;
             // climbing stairs for the first time
             if (climbingStairs) {
-                if ((stairDirectionalInput.x > 0 && stairGrade == Stairs.Grade.Up) || (stairDirectionalInput.x < 0 && stairGrade == Stairs.Grade.Down)) {
-                    stairLerpState = new StairLerpState(getPlayerBottom(), stairStartLocation.bottom);
-                } else {
-                    stairLerpState = new StairLerpState(getPlayerBottom(), stairStartLocation.top);
-                }
+                var topOrBottom = stairStart.directionUpOrDown(stairDirectionalInput) ? stairStart.bottom : stairStart.top;
+                stairLerpState = new StairLerpState(getPlayerBottom(), topOrBottom);
             }
         }
         CalculateVelocity();
 
         if (climbingStairs) {
-            Debug.Log("On Stairs");
             if (stairLerpState != null) {
                 if (stairDirectionalInput.x != 0) {
                     velocity = Vector2.zero;
@@ -136,16 +125,23 @@ public class Player : MonoBehaviour {
                     var fracJourney = distCovered / journeyLength;
                     if (getPlayerBottom() != end) {
                         var newBottomPos = Vector2.Lerp(start, end, fracJourney);
-                        var oldPos = transform.position;
-                        transform.position = new Vector3(newBottomPos.x, newBottomPos.y + collider.bounds.extents.y, oldPos.z);
+                        setPlayerBottom(newBottomPos);
                     } else {
+                        // finished lerping to start of stairs
                         stairLerpState = null;
                     }
                 }
             } else {
                 velocity.x = velocity.y = stairDirectionalInput.x * moveSpeed;
-                if (stairGrade == Stairs.Grade.Down) {
+                if (stairStart != null && stairStart.grade == Stairs.Grade.Down) {
                     velocity.y *= -1;
+                }
+                if (willLeaveStairs(velocity * Time.deltaTime)) {
+                    velocity = Vector2.zero;
+                    Stairs currentStairs = getEndStairsPlayerIsOn();
+                    var topOrBottom = currentStairs.directionUpOrDown(stairDirectionalInput) ? currentStairs.top : currentStairs.bottom;
+                    transform.position = new Vector3(topOrBottom.x, topOrBottom.y + collider.bounds.extents.y, 0);
+                    climbingStairs = false;
                 }
             }
         }
@@ -159,17 +155,17 @@ public class Player : MonoBehaviour {
             velocity.x = 0;
         }
 
-        controller.Move(velocity * Time.deltaTime, directionalInput, climbingStairs: climbingStairs);
+        controller.Move(velocity * Time.deltaTime, DirectionalInput, climbingStairs: climbingStairs);
 
         if (controller.collisions.above || controller.collisions.below) {
             velocity.y = 0;
         }
 
-        if (!jumped && wasOnGround && !controller.collisions.below && !onStairs) {
+        if (!jumped && wasOnGround && !controller.collisions.below && !touchingStairs) {
             falling = true;
         }
 
-        if (climbingStairs && !onStairs) {
+        if (climbingStairs && !touchingStairs) {
             climbingStairs = false;
         }
     }
@@ -215,22 +211,21 @@ public class Player : MonoBehaviour {
     }
 
     void CalculateVelocity() {
-        velocity.x = directionalInput.x * moveSpeed;
+        velocity.x = DirectionalInput.x * moveSpeed;
         velocity.y += gravity * Time.deltaTime;
     }
 
     void OnTriggerEnter2D(Collider2D collider) {
         if (collider.gameObject.tag == Stairs.TAG) {
-            Debug.Log("Stairs Enter");
             var stairs = collider.gameObject.GetComponent<Stairs>();
-            stairGrade = stairs.grade;
             // ready to climb stairs for the first time
-            if (!onStairs && controller.collisions.below && stairs.end) {
-                stairStartLocation = stairs;
+            if (!touchingStairs && controller.collisions.below && stairs.end) {
+                stairStart = stairs;
+                stairEnds.Add(stairs);
             }
 
-            if (onStairs && stairs.end) {
-                stairEndLocation = stairs;
+            if (touchingStairs && stairs.end) {
+                stairEnds.Add(stairs);
             }
             addStairs();
         }
@@ -238,22 +233,40 @@ public class Player : MonoBehaviour {
 
     void OnTriggerExit2D(Collider2D collider) {
         if (collider.gameObject.tag == Stairs.TAG) {
-            Debug.Log("Stairs Exit");
             removeStairs();
-            if (!onStairs) {
-                stairStartLocation = null;
+            if (!touchingStairs) {
+                stairStart = null;
+                stairEnds.Clear();
             }
         }
+    }
+
+    bool willLeaveStairs(Vector3 newVelocity) {
+        Stairs stairs = getEndStairsPlayerIsOn();
+        Vector2 newVelocity2 = new Vector2(newVelocity.x, newVelocity.y);
+        var collidedStairs = Physics2D.OverlapPoint(getPlayerBottom() + newVelocity2, layerMask: stairMask);
+        return collidedStairs == null;
     }
 
     Vector2 getPlayerBottom() {
         return new Vector2(collider.bounds.center.x, collider.bounds.min.y);
     }
 
+    void setPlayerBottom(Vector2 newPos) {
+        var oldPos = transform.position;
+        transform.position = new Vector3(newPos.x, newPos.y + collider.bounds.extents.y, oldPos.z);
+    }
+
+    Stairs getEndStairsPlayerIsOn() {
+        return stairEnds
+            .Where(stairEnd => stairEnd.collider.bounds.Contains(getPlayerBottom()))
+            .FirstOrDefault();
+    }
+
     void OnDrawGizmos() {
         Gizmos.color = Color.red;
-        if (stairStartLocation != null) {
-            var loc = stairStartLocation;
+        if (stairStart != null) {
+            var loc = stairStart;
             Gizmos.DrawSphere(new Vector3(loc.bottom.x, loc.bottom.y, 0), 0.2f);
             Gizmos.DrawSphere(new Vector3(loc.top.x, loc.top.y, 0), 0.2f);
         }

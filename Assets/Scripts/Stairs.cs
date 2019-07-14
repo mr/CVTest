@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 public class Stairs : MonoBehaviour {
 
@@ -39,5 +40,20 @@ public class Stairs : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
+    }
+
+    public bool directionUpOrDown(Vector2 direction) =>
+        (direction.x > 0 && grade == Stairs.Grade.Up) || (direction.x < 0 && grade == Stairs.Grade.Down);
+
+    // If we're near the bottom make sure we're moving up
+    // if we're near the top make sure we're going down
+    // == is !xor for booleans
+    public bool allowedToClimb(Vector2 position, Vector2 direction) =>
+        nearBottom(position) == directionUpOrDown(direction);
+
+    public bool nearBottom(Vector2 position) {
+        var topDistance = Vector2.Distance(position, top);
+        var bottomDistance = Vector2.Distance(position, bottom);
+        return bottomDistance < topDistance;
     }
 }
