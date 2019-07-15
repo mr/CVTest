@@ -2,6 +2,7 @@
 using Enums;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour {
@@ -12,6 +13,7 @@ public class Player : MonoBehaviour {
     public float minJumpHeight = 1;
     public float timeToJumpApex = .4f;
     public float moveSpeed = 6;
+    public float playerFootSize = 0.3f;
 
     bool wasOnGround = false;
     bool jumped = false;
@@ -59,7 +61,7 @@ public class Player : MonoBehaviour {
         get { return directionalInput; }
     }
 
-    Vector2 stairDirectionalInput;
+    // Vector2 stairDirectionalInput;
 
     Stairs stairStart = null;
     // This contains the start!
@@ -101,22 +103,23 @@ public class Player : MonoBehaviour {
 
         if (!climbingStairs) {
             climbingStairs = touchingStairs
-                && stairDirectionalInput.x != 0
                 && stairStart != null
-                && stairStart.allowedToClimb(getPlayerBottom(), stairDirectionalInput)
+                && stairStart.collider.bounds.Intersects(getPlayerBottomBounds())
+                && stairStart.allowedToStartClimb(getPlayerBottom(), DirectionalInput)
                 && controller.collisions.below;
             // climbing stairs for the first time
             if (climbingStairs) {
-                var topOrBottom = stairStart.directionUpOrDown(stairDirectionalInput) ? stairStart.bottom : stairStart.top;
+                var topOrBottom = stairStart.isHeadingUp(DirectionalInput) ? stairStart.bottom : stairStart.top;
                 stairLerpState = new StairLerpState(getPlayerBottom(), topOrBottom);
             }
         }
         CalculateVelocity();
 
         if (climbingStairs) {
+            // Default to not moving on the stairs (aka don't fall through the stairs)
+            velocity = Vector2.zero;
             if (stairLerpState != null) {
-                if (stairDirectionalInput.x != 0) {
-                    velocity = Vector2.zero;
+                if (DirectionalInput != Vector2.zero) {
                     var startTime = stairLerpState.Value.startTime;
                     var journeyLength = stairLerpState.Value.length;
                     var start = stairLerpState.Value.start;
@@ -132,14 +135,19 @@ public class Player : MonoBehaviour {
                     }
                 }
             } else {
-                velocity.x = velocity.y = stairDirectionalInput.x * moveSpeed;
+                var isYInput = DirectionalInput.y != 0;
+                velocity.x = velocity.y =  (isYInput ? DirectionalInput.y : DirectionalInput.x) * moveSpeed;
                 if (stairStart != null && stairStart.grade == Stairs.Grade.Down) {
-                    velocity.y *= -1;
+                    if (isYInput) {
+                        velocity.x *= -1;
+                    } else {
+                        velocity.y *= -1;
+                    }
                 }
                 if (willLeaveStairs(velocity * Time.deltaTime)) {
                     velocity = Vector2.zero;
                     Stairs currentStairs = getEndStairsPlayerIsOn();
-                    var topOrBottom = currentStairs.directionUpOrDown(stairDirectionalInput) ? currentStairs.top : currentStairs.bottom;
+                    var topOrBottom = currentStairs.isHeadingUp(DirectionalInput) ? currentStairs.top : currentStairs.bottom;
                     transform.position = new Vector3(topOrBottom.x, topOrBottom.y + collider.bounds.extents.y, 0);
                     climbingStairs = false;
                 }
@@ -176,14 +184,7 @@ public class Player : MonoBehaviour {
 
     void GetInput() {
         DirectionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
-        if (Input.GetKey(KeyCode.A)) {
-            stairDirectionalInput = Vector2.left;
-        } else if (Input.GetKey(KeyCode.S)) {
-            stairDirectionalInput = Vector2.right;
-        } else {
-            stairDirectionalInput = Vector2.zero;
-        }
+        // DirectionalInput = new Vector2(1, -1);
 
         if (Input.GetKeyDown(KeyCode.Space)) {
             OnJumpInputDown();
@@ -215,11 +216,36 @@ public class Player : MonoBehaviour {
         velocity.y += gravity * Time.deltaTime;
     }
 
+    bool willLeaveStairs(Vector3 newVelocity) {
+        Stairs stairs = getEndStairsPlayerIsOn();
+        Vector2 newVelocity2 = new Vector2(newVelocity.x, newVelocity.y);
+        var collidedStairs = Physics2D.OverlapPoint(getPlayerBottom() + newVelocity2, layerMask: stairMask);
+        return collidedStairs == null;
+    }
+
+    Vector2 getPlayerBottom() {
+        return new Vector2(collider.bounds.center.x, collider.bounds.min.y);
+    }
+
+    void setPlayerBottom(Vector2 newPos) {
+        var oldPos = transform.position;
+        transform.position = new Vector3(newPos.x, newPos.y + collider.bounds.extents.y, oldPos.z);
+    }
+
+    Bounds getPlayerBottomBounds() {
+        return new Bounds(getPlayerBottom(), new Vector2(collider.bounds.size.x, playerFootSize));
+    }
+
+    Stairs getEndStairsPlayerIsOn() {
+        return stairEnds
+            .Where(stairEnd => stairEnd.collider.bounds.Contains(getPlayerBottom()))
+            .FirstOrDefault();
+    }
     void OnTriggerEnter2D(Collider2D collider) {
         if (collider.gameObject.tag == Stairs.TAG) {
             var stairs = collider.gameObject.GetComponent<Stairs>();
             // ready to climb stairs for the first time
-            if (!touchingStairs && controller.collisions.below && stairs.end) {
+            if (controller.collisions.below && stairs.end) {
                 stairStart = stairs;
                 stairEnds.Add(stairs);
             }
@@ -241,28 +267,6 @@ public class Player : MonoBehaviour {
         }
     }
 
-    bool willLeaveStairs(Vector3 newVelocity) {
-        Stairs stairs = getEndStairsPlayerIsOn();
-        Vector2 newVelocity2 = new Vector2(newVelocity.x, newVelocity.y);
-        var collidedStairs = Physics2D.OverlapPoint(getPlayerBottom() + newVelocity2, layerMask: stairMask);
-        return collidedStairs == null;
-    }
-
-    Vector2 getPlayerBottom() {
-        return new Vector2(collider.bounds.center.x, collider.bounds.min.y);
-    }
-
-    void setPlayerBottom(Vector2 newPos) {
-        var oldPos = transform.position;
-        transform.position = new Vector3(newPos.x, newPos.y + collider.bounds.extents.y, oldPos.z);
-    }
-
-    Stairs getEndStairsPlayerIsOn() {
-        return stairEnds
-            .Where(stairEnd => stairEnd.collider.bounds.Contains(getPlayerBottom()))
-            .FirstOrDefault();
-    }
-
     void OnDrawGizmos() {
         Gizmos.color = Color.red;
         if (stairStart != null) {
@@ -270,5 +274,8 @@ public class Player : MonoBehaviour {
             Gizmos.DrawSphere(new Vector3(loc.bottom.x, loc.bottom.y, 0), 0.2f);
             Gizmos.DrawSphere(new Vector3(loc.top.x, loc.top.y, 0), 0.2f);
         }
+        Gizmos.color = Color.green;
+        var bottomBounds = getPlayerBottomBounds();
+        Gizmos.DrawCube(bottomBounds.center, bottomBounds.size);
     }
 }

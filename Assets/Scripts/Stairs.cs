@@ -8,6 +8,9 @@ public class Stairs : MonoBehaviour {
 
     public static string TAG = "Stairs";
 
+    // Direction stairs are headed (read ltr)
+    //  +  == Up,    +  == Down
+    // ++            ++
     public enum Grade {
         Up, Down
     }
@@ -42,14 +45,15 @@ public class Stairs : MonoBehaviour {
 
     }
 
-    public bool directionUpOrDown(Vector2 direction) =>
-        (direction.x > 0 && grade == Stairs.Grade.Up) || (direction.x < 0 && grade == Stairs.Grade.Down);
+    // Is the player trying to move positively on the y axis?
+    public bool isHeadingUp(Vector2 direction) =>
+        (direction.x > 0 && grade == Stairs.Grade.Up) || (direction.x < 0 && grade == Stairs.Grade.Down) || (direction.y > 0);
 
     // If we're near the bottom make sure we're moving up
     // if we're near the top make sure we're going down
     // == is !xor for booleans
-    public bool allowedToClimb(Vector2 position, Vector2 direction) =>
-        nearBottom(position) == directionUpOrDown(direction);
+    public bool allowedToStartClimb(Vector2 position, Vector2 direction) =>
+        (direction.y != 0) && (nearBottom(position) == isHeadingUp(direction));
 
     public bool nearBottom(Vector2 position) {
         var topDistance = Vector2.Distance(position, top);
