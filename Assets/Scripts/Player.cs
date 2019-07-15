@@ -63,8 +63,7 @@ public class Player : MonoBehaviour {
 
     // Vector2 stairDirectionalInput;
 
-    Stairs stairStart = null;
-    // This contains the start!
+    Stairs validStair = null;
     HashSet<Stairs> stairEnds = new HashSet<Stairs>();
 
     StairLerpState? stairLerpState = null;
@@ -102,14 +101,17 @@ public class Player : MonoBehaviour {
         }
 
         if (!climbingStairs) {
+            validStair = stairEnds
+                .Where(stair =>
+                    stair.collider.bounds.Intersects(getPlayerBottomBounds())
+                        && stair.allowedToStartClimb(getPlayerBottom(), DirectionalInput))
+                .FirstOrDefault();
             climbingStairs = touchingStairs
-                && stairStart != null
-                && stairStart.collider.bounds.Intersects(getPlayerBottomBounds())
-                && stairStart.allowedToStartClimb(getPlayerBottom(), DirectionalInput)
+                && validStair != null
                 && controller.collisions.below;
             // climbing stairs for the first time
             if (climbingStairs) {
-                var topOrBottom = stairStart.isHeadingUp(DirectionalInput) ? stairStart.bottom : stairStart.top;
+                var topOrBottom = validStair.isHeadingUp(DirectionalInput) ? validStair.bottom : validStair.top;
                 stairLerpState = new StairLerpState(getPlayerBottom(), topOrBottom);
             }
         }
@@ -137,7 +139,7 @@ public class Player : MonoBehaviour {
             } else {
                 var isYInput = DirectionalInput.y != 0;
                 velocity.x = velocity.y =  (isYInput ? DirectionalInput.y : DirectionalInput.x) * moveSpeed;
-                if (stairStart != null && stairStart.grade == Stairs.Grade.Down) {
+                if (validStair != null && validStair.grade == Stairs.Grade.Down) {
                     if (isYInput) {
                         velocity.x *= -1;
                     } else {
@@ -150,6 +152,7 @@ public class Player : MonoBehaviour {
                     var topOrBottom = currentStairs.isHeadingUp(DirectionalInput) ? currentStairs.top : currentStairs.bottom;
                     transform.position = new Vector3(topOrBottom.x, topOrBottom.y + collider.bounds.extents.y, 0);
                     climbingStairs = false;
+                    validStair = null;
                 }
             }
         }
@@ -246,7 +249,6 @@ public class Player : MonoBehaviour {
             var stairs = collider.gameObject.GetComponent<Stairs>();
             // ready to climb stairs for the first time
             if (controller.collisions.below && stairs.end) {
-                stairStart = stairs;
                 stairEnds.Add(stairs);
             }
 
@@ -261,7 +263,6 @@ public class Player : MonoBehaviour {
         if (collider.gameObject.tag == Stairs.TAG) {
             removeStairs();
             if (!touchingStairs) {
-                stairStart = null;
                 stairEnds.Clear();
             }
         }
@@ -269,10 +270,9 @@ public class Player : MonoBehaviour {
 
     void OnDrawGizmos() {
         Gizmos.color = Color.red;
-        if (stairStart != null) {
-            var loc = stairStart;
-            Gizmos.DrawSphere(new Vector3(loc.bottom.x, loc.bottom.y, 0), 0.2f);
-            Gizmos.DrawSphere(new Vector3(loc.top.x, loc.top.y, 0), 0.2f);
+        if (validStair != null) {
+            Gizmos.DrawSphere(new Vector3(validStair.bottom.x, validStair.bottom.y, 0), 0.2f);
+            Gizmos.DrawSphere(new Vector3(validStair.top.x, validStair.top.y, 0), 0.2f);
         }
         Gizmos.color = Color.green;
         var bottomBounds = getPlayerBottomBounds();
