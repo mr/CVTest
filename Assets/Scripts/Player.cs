@@ -189,16 +189,18 @@ public class Player : MonoBehaviour {
         DirectionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         // DirectionalInput = new Vector2(1, -1);
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Joystick1Button1)) {
             OnJumpInputDown();
         }
-        if (Input.GetKeyUp(KeyCode.Space)) {
+        if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Joystick1Button1)) {
             OnJumpInputUp();
         }
 
-        if (Input.GetKeyDown(KeyCode.Z)) {
+        if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.Joystick1Button0)) {
             whip.DoWhip();
         }
+
+        ControllerDebug();
     }
 
     public void OnJumpInputDown() {
@@ -277,5 +279,26 @@ public class Player : MonoBehaviour {
         Gizmos.color = Color.green;
         var bottomBounds = getPlayerBottomBounds();
         Gizmos.DrawCube(bottomBounds.center, bottomBounds.size);
+    }
+
+    void ControllerDebug() {
+        var pressed = Enumerable.Range(0, 10)
+            .Select(i => new Tuple<int, bool>(i, Input.GetKeyDown("joystick button " + i)))
+            .Where(tuple => tuple.Item2)
+            .FirstOrDefault();
+
+        if (pressed != null) {
+            Debug.Log("joystick button " + pressed.Item1);
+        }
+
+        var axis = Input.GetAxis("X Axis");
+        if (axis != 0) {
+            Debug.Log("X Axis: " + axis);
+        }
+
+        var axis6 = Input.GetAxis("6th Axis");
+        if (axis != 0) {
+            Debug.Log("6th Axis: " + axis6);
+        }
     }
 }
