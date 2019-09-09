@@ -186,8 +186,15 @@ public class Player : MonoBehaviour {
     }
 
     void GetInput() {
-        DirectionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        // DirectionalInput = new Vector2(1, -1);
+        var axis7 = Input.GetAxisRaw("7th Axis");
+        var axis8 = Input.GetAxisRaw("8th Axis");
+        var horizontal = Input.GetAxisRaw("Horizontal");
+        var vertical = Input.GetAxisRaw("Vertical");
+
+        // prioritize dpad :^)
+        var xaxis = axis7 != 0 ? axis7 : horizontal;
+        var yaxis = axis8 != 0 ? -axis8 : vertical;
+        DirectionalInput = new Vector2(xaxis, yaxis);
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Joystick1Button1)) {
             OnJumpInputDown();
@@ -282,7 +289,7 @@ public class Player : MonoBehaviour {
     }
 
     void ControllerDebug() {
-        var pressed = Enumerable.Range(0, 10)
+        var pressed = Enumerable.Range(0, 20)
             .Select(i => new Tuple<int, bool>(i, Input.GetKeyDown("joystick button " + i)))
             .Where(tuple => tuple.Item2)
             .FirstOrDefault();
@@ -296,9 +303,14 @@ public class Player : MonoBehaviour {
             Debug.Log("X Axis: " + axis);
         }
 
-        var axis6 = Input.GetAxis("6th Axis");
-        if (axis != 0) {
-            Debug.Log("6th Axis: " + axis6);
+        var axis6 = Input.GetAxis("8th Axis");
+        if (axis6 != 0) {
+            Debug.Log("8th Axis: " + axis6);
+        }
+
+        var axis7 = Input.GetAxis("7th Axis");
+        if (axis7 != 0) {
+            Debug.Log("7th Axis: " + axis7);
         }
     }
 }
