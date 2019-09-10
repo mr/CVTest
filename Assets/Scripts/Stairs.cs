@@ -46,14 +46,34 @@ public class Stairs : MonoBehaviour {
     }
 
     // Is the player trying to move positively on the y axis?
-    public bool isHeadingUp(Vector2 direction) =>
-        (direction.x > 0 && grade == Stairs.Grade.Up) || (direction.x < 0 && grade == Stairs.Grade.Down) || (direction.y > 0);
+    // Check y axis first since that is prioritized when moving
+    public bool IsHeadingUp(Vector2 direction) {
+        if (direction.y > 0) {
+            return true;
+        } else if (direction.y < 0) {
+            return false;
+        }
+
+        return (direction.x > 0 && grade == Stairs.Grade.Up) || (direction.x < 0 && grade == Stairs.Grade.Down);
+    }
 
     // If we're near the bottom make sure we're moving up
     // if we're near the top make sure we're going down
     // == is !xor for booleans
-    public bool allowedToStartClimb(Vector2 position, Vector2 direction) =>
-        (direction.y != 0) && (nearBottom(position) == isHeadingUp(direction));
+    // Make sure the player foot contains the point we want to lerp to
+    public bool allowedToStartClimb(Vector2 position, Bounds bounds, Vector2 direction) {
+        if (direction.y == 0) {
+            return false;
+        }
+
+        bool isHeadingUp = IsHeadingUp(direction);
+        if (nearBottom(position) != isHeadingUp) {
+            return false;
+        }
+
+        var topOrBottom = isHeadingUp ? bottom : top;
+        return bounds.Contains(topOrBottom);
+    }
 
     public bool nearBottom(Vector2 position) {
         var topDistance = Vector2.Distance(position, top);
