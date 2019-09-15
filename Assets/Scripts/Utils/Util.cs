@@ -25,6 +25,14 @@ public static class Util {
         }
     }
 
+    public static float DirectionToSign(Direction direction) {
+        if (direction == Direction.Left) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+
     public static Direction BoolToDirection(bool boolean) {
         if (!boolean) {
             return Direction.Left;

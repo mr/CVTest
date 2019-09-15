@@ -3,9 +3,10 @@ using System.Collections;
 
 [RequireComponent(typeof(Controller2D))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class Skellington : MonoBehaviour {
+public class Skellington : MonoBehaviour, IEnemy {
 
     public float moveSpeed = 2;
+    public int damage = 1;
 
     public Bone bone;
 
@@ -93,8 +94,12 @@ public class Skellington : MonoBehaviour {
     }
 
     void OnTriggerEnter2D(Collider2D collider) {
-        if (collider.gameObject.tag == "Whip") {
+        if (collider.gameObject.tag == Whip.TAG) {
             Destroy(gameObject);
         }
+    }
+
+    public int GetDamage() {
+        return damage;
     }
 }

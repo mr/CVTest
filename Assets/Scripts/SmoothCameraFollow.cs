@@ -41,7 +41,6 @@ public class SmoothCameraFollow : MonoBehaviour {
             }
         }
 
-
         currentLookAheadX = Mathf.SmoothDamp(currentLookAheadX, targetLookAheadX, ref smoothLookVelocityX, lookSmoothTimeX);
 
         focusPosition.y = Mathf.SmoothDamp(transform.position.y, focusPosition.y, ref smoothVelocityY, verticalSmoothTime);
@@ -50,8 +49,8 @@ public class SmoothCameraFollow : MonoBehaviour {
     }
 
     void OnDrawGizmos() {
-        Gizmos.color = new Color(1, 0, 0, .5f);
-        Gizmos.DrawCube(focusArea.centre, focusAreaSize);
+        // Gizmos.color = new Color(1, 0, 0, .5f);
+        // Gizmos.DrawCube(focusArea.centre, focusAreaSize);
     }
 
     struct FocusArea {

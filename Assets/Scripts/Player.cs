@@ -9,16 +9,22 @@ public class Player : MonoBehaviour {
 
     public LayerMask stairMask;
 
-    public float maxJumpHeight = 4;
-    public float minJumpHeight = 1;
+    public float jumpHeight = 4;
     public float timeToJumpApex = .4f;
     public float moveSpeed = 6;
     public float playerFootSize = 0.3f;
+    public float recoilHeight = 2;
+    public float timeToRecoilApex = .4f;
+    public float recoilSpeed = 5;
+    public float stairSpeed = 6;
+
+    public int health = 10;
 
     bool wasOnGround = false;
     bool jumped = false;
     bool falling = false;
     bool climbingStairs = false;
+    bool recoiling = false;
 
     int numOnStairs = 0;
     bool touchingStairs {
@@ -36,10 +42,10 @@ public class Player : MonoBehaviour {
     }
 
     float gravity;
-    float maxJumpVelocity;
-    float minJumpVelocity;
+    float jumpVelocity;
+    float recoilGravity;
+    float recoilVelocity;
     Vector3 velocity;
-    float velocityXSmoothing;
 
     Controller2D controller;
 
@@ -54,14 +60,10 @@ public class Player : MonoBehaviour {
                 whip.WhipDirection = Direction.Right;
             }
 
-            if (IsOnGround() || touchingStairs) {
-                directionalInput = value;
-            }
+            directionalInput = value;
         }
         get { return directionalInput; }
     }
-
-    // Vector2 stairDirectionalInput;
 
     Stairs validStair = null;
     HashSet<Stairs> stairEnds = new HashSet<Stairs>();
@@ -86,14 +88,19 @@ public class Player : MonoBehaviour {
         }
     }
 
+    Direction? enemyHitDirection = null;
+    public int invulnerabilityDuration = 5;
+    float invulnerabilityDurationState = 0;
+
     public Whip whip;
 
     void Start() {
         controller = GetComponent<Controller2D>();
         collider = GetComponent<Collider2D>();
-        gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
-        maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
-        minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
+        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
+        recoilGravity = -(2 * recoilHeight) / Mathf.Pow(timeToRecoilApex, 2);
+        jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+        recoilVelocity = Mathf.Abs(recoilGravity) * timeToRecoilApex;
         GameManager.Instance.PlayerGravity = gravity;
     }
 
@@ -103,52 +110,24 @@ public class Player : MonoBehaviour {
         if (IsOnGround() && velocity.y <= 0) {
             jumped = false;
             falling = false;
+            recoiling = false;
+        }
+
+        CalculateVelocity();
+
+        if (enemyHitDirection != null) {
+            velocity.x = Util.DirectionToSign(enemyHitDirection.Value) * recoilSpeed;
+            velocity.y = recoilVelocity;
+            enemyHitDirection = null;
+            recoiling = true;
         }
 
         if (!climbingStairs) {
             StartClimbingIfAble();
         }
 
-        CalculateVelocity();
-
         if (climbingStairs) {
-            // Default to not moving on the stairs (aka don't fall through the stairs)
-            velocity = Vector2.zero;
-            if (stairLerpState != null) {
-                if (DirectionalInput != Vector2.zero) {
-                    var start = stairLerpState.Value.start;
-                    var end = stairLerpState.Value.end;
-                    var fracJourney = stairLerpState?.FracJourney(Time.time, moveSpeed);
-                    if (GetPlayerBottom() != end) {
-                        var newBottomPos = Vector2.Lerp(start, end, fracJourney.Value);
-                        SetPlayerBottom(newBottomPos);
-                    } else {
-                        // finished lerping to start of stairs
-                        stairLerpState = null;
-                    }
-                }
-            }
-
-            if (stairLerpState == null) {
-                var isYInput = DirectionalInput.y != 0;
-                velocity.x = velocity.y =  (isYInput ? DirectionalInput.y : DirectionalInput.x) * moveSpeed;
-                if (validStair != null && validStair.grade == Stairs.Grade.Down) {
-                    if (isYInput) {
-                        velocity.x *= -1;
-                    } else {
-                        velocity.y *= -1;
-                    }
-                }
-                if (WillLeaveStairs(velocity * Time.deltaTime)) {
-                    velocity = Vector2.zero;
-                    Stairs currentStairs = GetEndStairsPlayerIsOn();
-                    var topOrBottom = currentStairs.IsHeadingUp(DirectionalInput)
-                        ? currentStairs.top
-                        : currentStairs.bottom;
-                    transform.position = new Vector3(topOrBottom.x, topOrBottom.y + collider.bounds.extents.y, 0);
-                    StartClimbingIfAble();
-                }
-            }
+            ClimbStairs();
         }
 
         if (falling) {
@@ -166,7 +145,8 @@ public class Player : MonoBehaviour {
             velocity.y = 0;
         }
 
-        if (!jumped && wasOnGround && !IsOnGround() && !touchingStairs) {
+        // falling refers to walking off an edge, not falling from a jump
+        if (!jumped && !recoiling && wasOnGround && !IsOnGround() && !touchingStairs) {
             falling = true;
         }
 
@@ -177,58 +157,26 @@ public class Player : MonoBehaviour {
 
     void LateUpdate() {
         wasOnGround = IsOnGround();
-    }
-
-    void GetInput() {
-        var axis7 = Input.GetAxisRaw("7th Axis");
-        var axis8 = Input.GetAxisRaw("8th Axis");
-        var horizontal = Input.GetAxisRaw("Horizontal");
-        var vertical = Input.GetAxisRaw("Vertical");
-
-        // prioritize dpad :^)
-        var xaxis = axis7 != 0 ? axis7 : horizontal;
-        var yaxis = axis8 != 0 ? -axis8 : vertical;
-        DirectionalInput = new Vector2(xaxis, yaxis);
-
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Joystick1Button1)) {
-            OnJumpInputDown();
-        }
-        if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Joystick1Button1)) {
-            OnJumpInputUp();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.Joystick1Button0)) {
-            whip.DoWhip();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Joystick1Button7)) {
-            Debug.Break();
-        }
-    }
-
-    public void OnJumpInputDown() {
-        if (IsOnGround()) {
-            velocity.y = maxJumpVelocity;
-            jumped = true;
-        }
-    }
-
-    public void OnJumpInputUp() {
-        if (velocity.y > minJumpVelocity) {
-            velocity.y = minJumpVelocity;
+        if (invulnerabilityDurationState != 0) {
+            invulnerabilityDurationState -= Time.deltaTime;
+            if (invulnerabilityDurationState <= 0) {
+                invulnerabilityDurationState = 0;
+            }
         }
     }
 
     void CalculateVelocity() {
-        velocity.x = DirectionalInput.x * moveSpeed;
+        if (IsOnGround() || climbingStairs) {
+            velocity.x = DirectionalInput.x * moveSpeed;
+        }
         velocity.y += gravity * Time.deltaTime;
     }
 
     void StartClimbingIfAble() {
         validStair = stairEnds
             .Where(stair =>
-                stair.collider.bounds.Intersects(GetPlayerBottomBounds())
-                    && stair.allowedToStartClimb(GetPlayerBottom(), GetPlayerBottomBounds(), DirectionalInput)
+                stair.allowedToStartClimb(GetPlayerBottom(), GetPlayerBottomBounds(), DirectionalInput)
+                    && stair.collider.bounds.Intersects(GetPlayerBottomBounds())
                     && (IsOnGround() || climbingStairs))
             .FirstOrDefault();
         climbingStairs = touchingStairs && validStair != null;
@@ -236,6 +184,46 @@ public class Player : MonoBehaviour {
         if (climbingStairs) {
             var topOrBottom = validStair.IsHeadingUp(DirectionalInput) ? validStair.bottom : validStair.top;
             stairLerpState = new LerpState(GetPlayerBottom(), topOrBottom);
+        }
+    }
+
+    void ClimbStairs() {
+        // Default to not moving on the stairs (aka don't fall through the stairs)
+        velocity = Vector2.zero;
+        if (stairLerpState != null) {
+            if (DirectionalInput != Vector2.zero) {
+                var start = stairLerpState.Value.start;
+                var end = stairLerpState.Value.end;
+                var fracJourney = stairLerpState?.FracJourney(Time.time, stairSpeed);
+                if (GetPlayerBottom() != end) {
+                    var newBottomPos = Vector2.Lerp(start, end, fracJourney.Value);
+                    SetPlayerBottom(newBottomPos);
+                } else {
+                    // finished lerping to start of stairs
+                    stairLerpState = null;
+                }
+            }
+        }
+
+        if (stairLerpState == null) {
+            var isYInput = DirectionalInput.y != 0;
+            velocity.x = velocity.y =  (isYInput ? DirectionalInput.y : DirectionalInput.x) * stairSpeed;
+            if (validStair != null && validStair.grade == Stairs.Grade.Down) {
+                if (isYInput) {
+                    velocity.x *= -1;
+                } else {
+                    velocity.y *= -1;
+                }
+            }
+            if (WillLeaveStairs(velocity * Time.deltaTime)) {
+                velocity = Vector2.zero;
+                Stairs currentStairs = GetEndStairsPlayerIsOn();
+                var topOrBottom = currentStairs.IsHeadingUp(DirectionalInput)
+                    ? currentStairs.top
+                    : currentStairs.bottom;
+                transform.position = new Vector3(topOrBottom.x, topOrBottom.y + collider.bounds.extents.y, 0);
+                StartClimbingIfAble();
+            }
         }
     }
 
@@ -264,7 +252,20 @@ public class Player : MonoBehaviour {
             .Where(stairEnd => stairEnd.collider.bounds.Contains(GetPlayerBottom()))
             .FirstOrDefault();
     }
+
+    bool IsInvulnerable() {
+        return invulnerabilityDurationState > 0;
+    }
+
     void OnTriggerEnter2D(Collider2D collider) {
+        if (Layers.ENEMY == collider.gameObject.layer && !IsInvulnerable()) {
+            var enemy = collider.gameObject.GetComponent<IEnemy>();
+            health -= enemy.GetDamage();
+            // away from the enemy
+            enemyHitDirection = Util.DirectionOf(gameObject, collider.gameObject);
+            invulnerabilityDurationState = invulnerabilityDuration;
+        }
+
         if (collider.gameObject.tag == Stairs.TAG) {
             var stairs = collider.gameObject.GetComponent<Stairs>();
             OnStairsTriggerEnter(collider, stairs);
@@ -297,15 +298,48 @@ public class Player : MonoBehaviour {
         }
     }
 
-    void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-        if (validStair != null) {
-            Gizmos.DrawSphere(new Vector3(validStair.bottom.x, validStair.bottom.y, 0), 0.2f);
-            Gizmos.DrawSphere(new Vector3(validStair.top.x, validStair.top.y, 0), 0.2f);
+    void GetInput() {
+        var axis7 = Input.GetAxisRaw("7th Axis");
+        var axis8 = Input.GetAxisRaw("8th Axis");
+        var horizontal = Input.GetAxisRaw("Horizontal");
+        var vertical = Input.GetAxisRaw("Vertical");
+
+        // prioritize dpad :^)
+        var xaxis = axis7 != 0 ? axis7 : horizontal;
+        var yaxis = axis8 != 0 ? -axis8 : vertical;
+        DirectionalInput = new Vector2(xaxis, yaxis);
+
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Joystick1Button1)) {
+            OnJumpInputDown();
         }
-        Gizmos.color = Color.green;
-        var bottomBounds = GetPlayerBottomBounds();
-        Gizmos.DrawCube(bottomBounds.center, bottomBounds.size);
+
+        if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.Joystick1Button0)) {
+            whip.DoWhip();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Joystick1Button12)) {
+            Debug.Break();
+        }
+    }
+
+    public void OnJumpInputDown() {
+        if (IsOnGround()) {
+            velocity.y = jumpVelocity;
+            jumped = true;
+        }
+    }
+
+    void OnDrawGizmos() {
+        if (Application.IsPlaying(gameObject)) {
+            Gizmos.color = Color.red;
+            if (validStair != null) {
+                Gizmos.DrawSphere(new Vector3(validStair.bottom.x, validStair.bottom.y, 0), 0.2f);
+                Gizmos.DrawSphere(new Vector3(validStair.top.x, validStair.top.y, 0), 0.2f);
+            }
+            Gizmos.color = Color.green;
+            var bottomBounds = GetPlayerBottomBounds();
+            Gizmos.DrawCube(bottomBounds.center, bottomBounds.size);
+        }
     }
 
     bool IsOnGround() => controller.collisions.below;

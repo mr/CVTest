@@ -8,6 +8,8 @@ using Enums;
 [RequireComponent(typeof(MeshRenderer))]
 public class Whip : MonoBehaviour {
 
+    public const string TAG = "Whip";
+
     BoxCollider2D boxCollider;
     MeshRenderer meshRenderer;
 
