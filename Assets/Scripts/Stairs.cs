@@ -19,7 +19,9 @@ public class Stairs : MonoBehaviour {
 
     public Grade grade;
 
+    [HideInInspector]
     public Vector2 bottom;
+    [HideInInspector]
     public Vector2 top;
 
     // Use this for initialization

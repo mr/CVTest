@@ -3,11 +3,12 @@ using System.Collections;
 
 using Enums;
 
-public class Bone : MonoBehaviour {
+public class Bone : MonoBehaviour, IEnemy {
 
     public float gravity;
     private Vector2 velocity;
     public float throwMagnitude;
+    public int damage = 1;
 
     public static GameObject Create(Direction direction, Vector2 position, Quaternion rotation) {
         var prefab = Resources.Load("Prefabs/Bone");
@@ -47,5 +48,9 @@ public class Bone : MonoBehaviour {
         if (collider.gameObject.tag == "Player") {
             Destroy(gameObject);
         }
+    }
+
+    public int GetDamage() {
+        return damage;
     }
 }
