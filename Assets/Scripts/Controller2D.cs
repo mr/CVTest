@@ -43,7 +43,10 @@ public class Controller2D : RaycastController {
         }
 
         HorizontalCollisions(ref moveAmount);
-        if (moveAmount.y != 0) {
+        // Go through the bottom of platforms
+        // Currently levels should be designed to avoid falling while inside a block since it pushes you up
+        // This will likely be changed once we stop emulating CV3
+        if (moveAmount.y < 0) {
             VerticalCollisions(ref moveAmount);
         }
 

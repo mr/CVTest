@@ -72,6 +72,7 @@ public class Skellington : MonoBehaviour, IEnemy {
                 timesWaited = 0;
                 throwing = true;
                 yield return new WaitForSeconds(boneThrowPauseTime);
+                if (Vector2.Distance(transform.position, player.transform.position) < 20)
                 Bone.Create(
                     Util.DirectionOf(of: player, relativeTo: gameObject),
                     transform.position,

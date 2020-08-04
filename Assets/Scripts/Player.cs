@@ -7,6 +7,7 @@ using System;
 
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour {
+    public const string Tag = "Player";
 
     public LayerMask stairMask;
 
@@ -98,6 +99,8 @@ public class Player : MonoBehaviour {
 
     Slider healthSlider;
 
+    public SceneLoader sceneLoader;
+
     void Start() {
         controller = GetComponent<Controller2D>();
         collider = GetComponent<Collider2D>();
@@ -111,6 +114,10 @@ public class Player : MonoBehaviour {
     }
 
     void Update() {
+        if (!sceneLoader.ready) {
+            return;
+        }
+
         GetInput();
 
         if (IsOnGround() && velocity.y <= 0) {
@@ -152,7 +159,7 @@ public class Player : MonoBehaviour {
         }
 
         // falling refers to walking off an edge, not falling from a jump
-        if (!jumped && !recoiling && wasOnGround && !IsOnGround() && !touchingStairs) {
+        if (!jumped && !recoiling && wasOnGround && !IsOnGround() && !climbingStairs) {
             falling = true;
         }
 
@@ -290,7 +297,8 @@ public class Player : MonoBehaviour {
     }
 
     void OnStairsTriggerEnter(Collider2D collider, Stairs stairs) {
-        if (stairs.end) {
+        // Tile stairs are null
+        if (stairs != null && stairs.end) {
             stairEnds.Add(stairs);
         }
 
