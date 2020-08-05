@@ -1,19 +1,15 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public static class SceneUtils {
     public const string General = "General";
 
     public static IEnumerator UnloadExceptGeneralAsync() {
-        var tasks = new List<AsyncOperation>();
         for (var i = 0; i < SceneManager.sceneCount; i++) {
             var scene = SceneManager.GetSceneAt(i);
             if (scene.isLoaded && scene.name != General) {
                 yield return SceneManager.UnloadSceneAsync(scene.buildIndex);
-                i = 0;
             }
         }
     }
@@ -32,13 +28,19 @@ public static class SceneUtils {
     }
 
     public static IEnumerator UnloadSceneNeighborsAsync(IScene currentScene, IScene newScene) {
+        // Get all scenes adjacent to our destination
         var newNeighbors = newScene.GetNeighbors();
         var neighborsToUnload =
             currentScene.GetNeighbors()
                 .Where(currentNeighbor =>
-                    !newNeighbors.Any(newNeighbor => newNeighbor.name == currentNeighbor.name));
+                    // Don't unload the scene we are about to move into!
+                    currentNeighbor.name != newScene.name
+                    // Find all scenes that are not adjacent to the new scene
+                    && !newNeighbors.Any(newNeighbor => newNeighbor.name == currentNeighbor.name));
         foreach (var neighbor in neighborsToUnload) {
-            yield return SceneManager.UnloadSceneAsync(neighbor.name);
+            if (SceneManager.GetSceneByName(neighbor.name).isLoaded) {
+                yield return SceneManager.UnloadSceneAsync(neighbor.name);
+            }
         }
     }
 }

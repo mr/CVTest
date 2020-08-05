@@ -1,8 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using System.Linq;
 
 public class SceneLoader : MonoBehaviour {
     private IScene currentScene = new Scene_1_1();
@@ -33,13 +30,13 @@ public class SceneLoader : MonoBehaviour {
     private IEnumerator LoadSceneAsync(SceneLoadRequest request) {
         // Must start at the current scene
         if (currentScene.name != request.from) {
-            yield return null;
+            yield break;
         }
 
         // Must be loading a neighbor
         var newScene = currentScene.GetNeighbors().Find(n => n.name == request.to);
         if (newScene == null) {
-            yield return null;
+            yield break;
         }
 
         // Unload scenes that are outside the buffer
