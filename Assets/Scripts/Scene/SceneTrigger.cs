@@ -52,6 +52,10 @@ public class SceneTrigger : MonoBehaviour {
     }
 
     void OnDrawGizmos() {
+        if (collider == null) {
+            return;
+        }
+
         var min = collider.bounds.min;
         var max = collider.bounds.max;
         if (orientation == Orientation.Horizontal) {
