@@ -13,8 +13,6 @@ public class SceneTrigger : MonoBehaviour {
 
     new Collider2D collider;
 
-    private Direction? entered = null;
-
     void Start() {
         collider = GetComponent<Collider2D>();
     }
