@@ -15,7 +15,7 @@ public class Stairs : MonoBehaviour {
         Up, Down
     }
 
-    public bool end = false;
+    public bool end;
 
     public Grade grade;
 

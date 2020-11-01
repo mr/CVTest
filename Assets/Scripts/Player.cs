@@ -4,6 +4,7 @@ using Enums;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Scene;
 
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour {
@@ -48,7 +49,7 @@ public class Player : MonoBehaviour {
 
     private Controller2D controller;
 
-    private new Collider2D collider;
+    private BoxCollider2D boxCollider;
 
     private Vector2 directionalInput;
     private Vector2 DirectionalInput {
@@ -101,7 +102,7 @@ public class Player : MonoBehaviour {
 
     void Start() {
         controller = GetComponent<Controller2D>();
-        collider = GetComponent<Collider2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
         gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         recoilGravity = -(2 * recoilHeight) / Mathf.Pow(timeToRecoilApex, 2);
         jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -199,7 +200,7 @@ public class Player : MonoBehaviour {
         stairLerpState = new LerpState(GetPlayerBottom(), topOrBottom);
     }
 
-    void ClimbStairs() {
+    private void ClimbStairs() {
         // Default to not moving on the stairs (aka don't fall through the stairs)
         velocity = Vector2.zero;
         if (stairLerpState != null) {
@@ -238,28 +239,28 @@ public class Player : MonoBehaviour {
         var topOrBottom = currentStairs.IsHeadingUp(DirectionalInput)
             ? currentStairs.top
             : currentStairs.bottom;
-        transform.position = new Vector3(topOrBottom.x, topOrBottom.y + collider.bounds.extents.y, 0);
+        transform.position = new Vector3(topOrBottom.x, topOrBottom.y + boxCollider.bounds.extents.y, 0);
         StartClimbingIfAble();
     }
 
     private bool WillLeaveStairs(Vector3 newVelocity) {
-        var stairs = GetEndStairsPlayerIsOn();
         var newVelocity2 = Vector3s.toVector2(newVelocity);
         var collidedStairs = Physics2D.OverlapPoint(GetPlayerBottom() + newVelocity2, layerMask: stairMask);
         return collidedStairs == null;
     }
 
     private Vector2 GetPlayerBottom() {
-        return new Vector2(collider.bounds.center.x, collider.bounds.min.y);
+        var bounds = boxCollider.bounds;
+        return new Vector2(bounds.center.x, bounds.min.y);
     }
 
     private void SetPlayerBottom(Vector2 newPos) {
         var oldPos = transform.position;
-        transform.position = new Vector3(newPos.x, newPos.y + collider.bounds.extents.y, oldPos.z);
+        transform.position = new Vector3(newPos.x, newPos.y + boxCollider.bounds.extents.y, oldPos.z);
     }
 
     private Bounds GetPlayerBottomBounds() {
-        return new Bounds(GetPlayerBottom(), new Vector2(collider.bounds.size.x, playerFootSize));
+        return new Bounds(GetPlayerBottom(), new Vector2(boxCollider.bounds.size.x, playerFootSize));
     }
 
     private Stairs GetEndStairsPlayerIsOn() =>
@@ -270,35 +271,33 @@ public class Player : MonoBehaviour {
         return invulnerabilityDurationState > 0;
     }
 
-    void OnTriggerEnter2D(Collider2D collider) {
-        if (Layers.ENEMY == collider.gameObject.layer && !IsInvulnerable()) {
-            var enemy = collider.gameObject.GetComponent<IEnemy>();
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (Layers.ENEMY == other.gameObject.layer && !IsInvulnerable()) {
+            var enemy = other.gameObject.GetComponent<IEnemy>();
             health -= enemy.GetDamage();
             if (health < 0) {
                 health = 0;
             }
-            healthSlider.value = (float) health / (float) maxHealth;
+            healthSlider.value = health / (float) maxHealth;
             // away from the enemy
-            enemyHitDirection = Util.DirectionOf(gameObject, collider.gameObject);
+            enemyHitDirection = Util.DirectionOf(gameObject, other.gameObject);
             invulnerabilityDurationState = invulnerabilityDuration;
         }
 
-        if (!collider.gameObject.CompareTag(Stairs.TAG)) {
-            return;
+        if (other.gameObject.CompareTag(Stairs.TAG)) {
+            var stairs = other.gameObject.GetComponent<Stairs>();
+            OnStairsTriggerEnter(other, stairs);
         }
-        var stairs = collider.gameObject.GetComponent<Stairs>();
-        OnStairsTriggerEnter(collider, stairs);
     }
 
-    void OnTriggerExit2D(Collider2D collider) {
-        if (!collider.gameObject.CompareTag(Stairs.TAG)) {
-            return;
+    void OnTriggerExit2D(Collider2D other) {
+        if (other.gameObject.CompareTag(Stairs.TAG)) {
+            var stairs = other.gameObject.GetComponent<Stairs>();
+            OnStairsTriggerExit(other, stairs);
         }
-        var stairs = collider.gameObject.GetComponent<Stairs>();
-        OnStairsTriggerExit(collider, stairs);
     }
 
-    private void OnStairsTriggerEnter(Collider2D collider, Stairs stairs) {
+    private void OnStairsTriggerEnter(Collider2D other, Stairs stairs) {
         // Tile stairs are null
         if (stairs != null && stairs.end) {
             stairEnds.Add(stairs);
@@ -307,9 +306,9 @@ public class Player : MonoBehaviour {
         addStairs();
     }
 
-    private void OnStairsTriggerExit(Collider2D collider, Stairs stairs) {
+    private void OnStairsTriggerExit(Collider2D other, Stairs stairs) {
         removeStairs();
-        if (stairs.end) {
+        if (stairs != null && stairs.end) {
             stairEnds.Remove(stairs);
         }
 

@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Enums;
+﻿using UnityEngine;
 
+namespace Scene {
 public class SceneTrigger : MonoBehaviour {
     public string entrance;
     public string exit;
@@ -11,20 +9,17 @@ public class SceneTrigger : MonoBehaviour {
         Horizontal, Vertical
     }
 
-    new Collider2D collider;
+    private BoxCollider2D boxCollider;
 
-    void Start() {
-        collider = GetComponent<Collider2D>();
+    private void Start() {
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
-    void Update() {
-
-    }
-
-    void OnTriggerEnter2D(Collider2D other) {
-        if (other.gameObject.tag == Player.Tag) {
-            var min = collider.bounds.min;
-            var max = collider.bounds.max;
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.gameObject.CompareTag(Player.Tag)) {
+            var bounds = boxCollider.bounds;
+            var min = bounds.min;
+            var max = bounds.max;
             var topLeft = new Vector2(min.x, max.y);
             var bottomLeft = new Vector2(min.x, min.y);
             var topRight = new Vector2(max.x, max.y);
@@ -49,13 +44,14 @@ public class SceneTrigger : MonoBehaviour {
         }
     }
 
-    void OnDrawGizmos() {
-        if (collider == null) {
+    private void OnDrawGizmos() {
+        if (boxCollider == null) {
             return;
         }
 
-        var min = collider.bounds.min;
-        var max = collider.bounds.max;
+        var bounds = boxCollider.bounds;
+        var min = bounds.min;
+        var max = bounds.max;
         if (orientation == Orientation.Horizontal) {
             Gizmos.color = Color.green;
             Gizmos.DrawLine(new Vector2(min.x, max.y), new Vector2(min.x, min.y));
@@ -68,4 +64,5 @@ public class SceneTrigger : MonoBehaviour {
             Gizmos.DrawLine(new Vector2(min.x, min.y), new Vector2(max.x, min.y));
         }
     }
+}
 }

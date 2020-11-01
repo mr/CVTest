@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Scene;
 
 class Scene_1_2 : IScene {
     public const string Name = "1-2";

@@ -1,29 +1,27 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Utils;
 
+namespace Scene {
 public class SceneLoader : MonoBehaviour {
     private IScene currentScene = new Scene_1_1();
 
     // Finished initial load and ready to start game.
     [HideInInspector]
-    public bool ready = false;
+    public bool ready;
     [HideInInspector]
-    public bool loading = false;
+    public bool loading;
 
-    private SceneLoadRequest? currentRequest = null;
-    private SceneLoadRequest? pendingRequest = null;
+    private SceneLoadRequest? currentRequest;
+    private SceneLoadRequest? pendingRequest;
 
-    void Start() {
+    private void Start() {
         StartCoroutine(Startup());
-    }
-
-    void Update() {
-        
     }
 
     private IEnumerator Startup() {
         yield return SceneUtils.UnloadExceptGeneralAsync();
-        yield return SceneUtils.LoadSceneAsync(currentScene);
+        yield return SceneUtils.LoadSceneWithNeighborsAsync(currentScene);
         ready = true;
     }
 
@@ -73,4 +71,5 @@ public class SceneLoader : MonoBehaviour {
         currentRequest = request;
         StartCoroutine(LoadSceneAsync(request));
     }
+}
 }
