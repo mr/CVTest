@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Scene {
+namespace SceneLoader {
 public readonly struct SceneLoadRequest {
     public readonly string from;
     public readonly string to;

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Scene {
+namespace SceneLoader {
 public interface IScene {
     string name { get; }
     List<IScene> GetNeighbors();

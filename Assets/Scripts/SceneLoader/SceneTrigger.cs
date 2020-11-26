@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Scene {
+namespace SceneLoader {
 public class SceneTrigger : MonoBehaviour {
     public string entrance;
     public string exit;

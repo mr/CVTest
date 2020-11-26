@@ -4,7 +4,7 @@ using Enums;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using Scene;
+using SceneLoader;
 
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour {
@@ -98,7 +98,7 @@ public class Player : MonoBehaviour {
 
     private Slider healthSlider;
 
-    public SceneLoader sceneLoader;
+    public SceneLoader.SceneLoader sceneLoader;
 
     void Start() {
         controller = GetComponent<Controller2D>();

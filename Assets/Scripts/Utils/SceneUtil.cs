@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Linq;
-using Scene;
+using SceneLoader;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

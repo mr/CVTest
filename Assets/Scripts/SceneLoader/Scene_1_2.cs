@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using SceneLoader;
 
 namespace SceneLoader {
 class Scene_1_2 : IScene {
