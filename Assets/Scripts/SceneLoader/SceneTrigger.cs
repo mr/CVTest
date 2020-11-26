@@ -16,6 +16,7 @@ public class SceneTrigger : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
+        Debug.Log("Collision with SceneTrigger");
         if (!other.gameObject.CompareTag(Player.Tag)) {
             return;
         }

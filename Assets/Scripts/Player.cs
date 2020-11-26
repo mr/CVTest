@@ -4,7 +4,6 @@ using Enums;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using SceneLoader;
 
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour {

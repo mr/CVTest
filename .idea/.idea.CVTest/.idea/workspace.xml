@@ -19,7 +19,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b6c16f7c-0c6a-4d61-ae7b-dc107f28da91" name="Default Changelist" comment="" />
+    <list default="true" id="b6c16f7c-0c6a-4d61-ae7b-dc107f28da91" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CVTest/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CVTest/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CVTest/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CVTest/.idea/indexLayout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CVTest/riderModule.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CVTest/riderModule.iml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -112,6 +116,7 @@
       <workItem from="1604255140414" duration="483000" />
       <workItem from="1604255744517" duration="5709000" />
       <workItem from="1606223911310" duration="2000" />
+      <workItem from="1606400679069" duration="32000" />
     </task>
     <servers />
   </component>
