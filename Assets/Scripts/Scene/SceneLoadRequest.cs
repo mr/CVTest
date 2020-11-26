@@ -30,5 +30,9 @@ public readonly struct SceneLoadRequest {
     public static bool operator !=(SceneLoadRequest first, SceneLoadRequest second) {
         return first.from != second.from || first.to != second.to;
     }
+
+    public override string ToString() {
+        return $"<SceneLoadRequest from:{from} to:{to}>";
+    }
 }
 }

@@ -19,20 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b6c16f7c-0c6a-4d61-ae7b-dc107f28da91" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.CVTest/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CVTest/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/General.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/General.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Scene/IScene.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Scene/IScene.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Scene/SceneLoadRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Scene/SceneLoadRequest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Scene/SceneLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Scene/SceneLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Scene/SceneTrigger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Scene/SceneTrigger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Scene/Scene_1_1.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Scene/Scene_1_1.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Scene/Scene_1_2.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Scene/Scene_1_2.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Scene/Scene_1_3.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Scene/Scene_1_3.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Stairs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Stairs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utils/SceneUtil.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utils/SceneUtil.cs" afterDir="false" />
-    </list>
+    <list default="true" id="b6c16f7c-0c6a-4d61-ae7b-dc107f28da91" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,7 +30,6 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/A085F107-D2C9-4135-A425-FE62D2BC8953/f1/08504206/Mathf.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/A085F107-D2C9-4135-A425-FE62D2BC8953/5f/cb78987d/Scene.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/A085F107-D2C9-4135-A425-FE62D2BC8953/b5/eb0971c0/AsyncOperation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/Unity/Hub/Editor/2020.1.10f1/Editor/Data/Resources/PackageManager/BuiltInPackages/com.unity.ugui/Runtime/EventSystem/EventSystem.cs" root0="SKIP_HIGHLIGHTING" />
@@ -100,10 +86,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="6019">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="6019" />
+      <option name="pid" />
       <option name="selectedOptions">
         <set />
       </option>
@@ -125,6 +111,7 @@
       <workItem from="1604172094147" duration="3794000" />
       <workItem from="1604255140414" duration="483000" />
       <workItem from="1604255744517" duration="5709000" />
+      <workItem from="1606223911310" duration="2000" />
     </task>
     <servers />
   </component>
