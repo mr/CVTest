@@ -9,10 +9,10 @@ public class SceneTrigger : MonoBehaviour {
         Horizontal, Vertical
     }
 
-    private BoxCollider2D boxCollider;
+    private new Collider2D collider;
 
     private void Start() {
-        boxCollider = GetComponent<BoxCollider2D>();
+        collider = GetComponent<Collider2D>();
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
@@ -21,7 +21,7 @@ public class SceneTrigger : MonoBehaviour {
             return;
         }
 
-        var bounds = boxCollider.bounds;
+        var bounds = collider.bounds;
         var min = bounds.min;
         var max = bounds.max;
         var topLeft = new Vector2(min.x, max.y);
@@ -53,11 +53,7 @@ public class SceneTrigger : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
-        if (boxCollider == null) {
-            return;
-        }
-
-        var bounds = boxCollider.bounds;
+        var bounds = new Bounds(transform.position, transform.localScale);
         var min = bounds.min;
         var max = bounds.max;
         if (orientation == Orientation.Horizontal) {

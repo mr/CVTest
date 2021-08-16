@@ -15,8 +15,6 @@ public class Stairs : MonoBehaviour {
         Up, Down
     }
 
-    public bool end;
-
     public Grade grade;
 
     [HideInInspector]
@@ -81,5 +79,11 @@ public class Stairs : MonoBehaviour {
         var topDistance = Vector2.Distance(position, top);
         var bottomDistance = Vector2.Distance(position, bottom);
         return bottomDistance < topDistance;
+    }
+
+    void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+        Gizmos.matrix = Matrix4x4.TRS(transform.position, Quaternion.Euler(0, 0, grade == Grade.Up ? 45 : -45), new Vector3(1, 0.25f, 1));
+        Gizmos.DrawCube(Vector3.zero, new Vector3(1, 1, 1));
     }
 }

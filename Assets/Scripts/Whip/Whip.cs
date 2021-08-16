@@ -4,13 +4,13 @@ using System.Collections;
 
 using Enums;
 
-[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(MeshRenderer))]
 public class Whip : MonoBehaviour {
 
     public const string TAG = "Whip";
 
-    BoxCollider2D boxCollider;
+    new Collider2D collider;
     MeshRenderer meshRenderer;
 
     public float timeToStartWhip = 0.2f;
@@ -33,7 +33,7 @@ public class Whip : MonoBehaviour {
     bool whipOut = false;
     public bool WhipOut {
         set {
-            boxCollider.enabled = value;
+            collider.enabled = value;
             meshRenderer.enabled = value;
             whipOut = value;
         }
@@ -50,8 +50,8 @@ public class Whip : MonoBehaviour {
     }
 
     void Start() {
-        boxCollider = GetComponent<BoxCollider2D>();
-        boxCollider.enabled = false;
+        collider = GetComponent<Collider2D>();
+        collider.enabled = false;
 
         meshRenderer = GetComponent<MeshRenderer>();
         meshRenderer.enabled = false;

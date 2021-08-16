@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Enums;
 using System.Collections.Generic;
@@ -48,15 +49,19 @@ public class Player : MonoBehaviour {
 
     private Controller2D controller;
 
-    private BoxCollider2D boxCollider;
+    private new Collider2D collider;
+
+    private SpriteRenderer spriteRenderer;
 
     private Vector2 directionalInput;
     private Vector2 DirectionalInput {
         set {
             if (value.x < 0) {
                 whip.WhipDirection = Direction.Left;
+                spriteRenderer.flipX = false;
             } else if (value.x > 0) {
                 whip.WhipDirection = Direction.Right;
+                spriteRenderer.flipX = true;
             }
 
             directionalInput = value;
@@ -101,7 +106,8 @@ public class Player : MonoBehaviour {
 
     void Start() {
         controller = GetComponent<Controller2D>();
-        boxCollider = GetComponent<BoxCollider2D>();
+        collider = GetComponent<Collider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         recoilGravity = -(2 * recoilHeight) / Mathf.Pow(timeToRecoilApex, 2);
         jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -238,7 +244,7 @@ public class Player : MonoBehaviour {
         var topOrBottom = currentStairs.IsHeadingUp(DirectionalInput)
             ? currentStairs.top
             : currentStairs.bottom;
-        transform.position = new Vector3(topOrBottom.x, topOrBottom.y + boxCollider.bounds.extents.y, 0);
+        transform.position = new Vector3(topOrBottom.x, topOrBottom.y + collider.bounds.extents.y, 0);
         StartClimbingIfAble();
     }
 
@@ -249,17 +255,17 @@ public class Player : MonoBehaviour {
     }
 
     private Vector2 GetPlayerBottom() {
-        var bounds = boxCollider.bounds;
+        var bounds = collider.bounds;
         return new Vector2(bounds.center.x, bounds.min.y);
     }
 
     private void SetPlayerBottom(Vector2 newPos) {
         var oldPos = transform.position;
-        transform.position = new Vector3(newPos.x, newPos.y + boxCollider.bounds.extents.y, oldPos.z);
+        transform.position = new Vector3(newPos.x, newPos.y + collider.bounds.extents.y, oldPos.z);
     }
 
     private Bounds GetPlayerBottomBounds() {
-        return new Bounds(GetPlayerBottom(), new Vector2(boxCollider.bounds.size.x, playerFootSize));
+        return new Bounds(GetPlayerBottom(), new Vector2(collider.bounds.size.x, playerFootSize));
     }
 
     private Stairs GetEndStairsPlayerIsOn() =>
@@ -298,7 +304,7 @@ public class Player : MonoBehaviour {
 
     private void OnStairsTriggerEnter(Collider2D other, Stairs stairs) {
         // Tile stairs are null
-        if (stairs != null && stairs.end) {
+        if (stairs != null) {
             stairEnds.Add(stairs);
         }
 
@@ -307,7 +313,7 @@ public class Player : MonoBehaviour {
 
     private void OnStairsTriggerExit(Collider2D other, Stairs stairs) {
         removeStairs();
-        if (stairs != null && stairs.end) {
+        if (stairs != null) {
             stairEnds.Remove(stairs);
         }
 
@@ -317,26 +323,21 @@ public class Player : MonoBehaviour {
     }
 
     private void GetInput() {
-        var axis7 = Input.GetAxisRaw("7th Axis");
-        var axis8 = Input.GetAxisRaw("8th Axis");
-        var horizontal = Input.GetAxisRaw("Horizontal");
-        var vertical = Input.GetAxisRaw("Vertical");
+        var gamepad = Gamepad.current;
 
         // prioritize dpad :^)
-        var xaxis = axis7 != 0 ? axis7 : horizontal;
-        var yaxis = axis8 != 0 ? -axis8 : vertical;
-        DirectionalInput = new Vector2(xaxis, yaxis);
+        var dpadLeft = -1 * gamepad.dpad.left.ReadValue();
+        var dpadRight = gamepad.dpad.right.ReadValue();
+        var dpadUp = gamepad.dpad.up.ReadValue();
+        var dpadDown = -1 * gamepad.dpad.down.ReadValue();
+        DirectionalInput = new Vector2(dpadLeft + dpadRight, dpadUp + dpadDown);
 
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Joystick1Button1)) {
+        if (gamepad.aButton.wasPressedThisFrame) {
             OnJumpInputDown();
         }
 
-        if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.Joystick1Button0)) {
+        if (gamepad.xButton.wasPressedThisFrame) {
             whip.DoWhip();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Joystick1Button12)) {
-            Debug.Break();
         }
     }
 
@@ -378,9 +379,9 @@ public class Player : MonoBehaviour {
             Debug.Log("X Axis: " + axis);
         }
 
-        var axis6 = Input.GetAxis("8th Axis");
+        var axis6 = Input.GetAxis("6th Axis");
         if (axis6 != 0) {
-            Debug.Log("8th Axis: " + axis6);
+            Debug.Log("6th Axis: " + axis6);
         }
 
         var axis7 = Input.GetAxis("7th Axis");
