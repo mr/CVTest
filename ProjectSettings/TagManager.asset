@@ -8,6 +8,8 @@ TagManager:
   - Whip
   - Stairs
   - SceneTrigger
+  - Vertical
+  - Horizontal
   layers:
   - Default
   - TransparentFX

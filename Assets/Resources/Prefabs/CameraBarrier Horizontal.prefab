@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 589120109029184602}
   - component: {fileID: 589120109029184605}
   m_Layer: 8
-  m_Name: CameraBarrier
-  m_TagString: Untagged
+  m_Name: CameraBarrier Horizontal
+  m_TagString: Horizontal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
