@@ -9,8 +9,9 @@ using System;
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour {
     public const string Tag = "Player";
-    public static Player GetInstance() =>
-        GameObject.FindGameObjectWithTag(Player.Tag).GetComponent<Player>();
+    public static Player Instance {
+        get => GameObject.FindGameObjectWithTag(Tag).GetComponent<Player>();
+    }
 
     public LayerMask stairMask;
 

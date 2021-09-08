@@ -24,10 +24,10 @@ public class Skellington : MonoBehaviour, IEnemy {
     public int boneThrowMaxWaitTime = 5;
 
     private bool throwing;
-    private GameObject player;
+    private Player player;
 
     void Awake() {
-        player = GameObject.FindGameObjectWithTag("Player");
+        player = Player.Instance;
     }
 
     void Start() {
@@ -72,13 +72,14 @@ public class Skellington : MonoBehaviour, IEnemy {
                 timesWaited = 0;
                 throwing = true;
                 yield return new WaitForSeconds(boneThrowPauseTime);
-                if (Vector2.Distance(transform.position, player.transform.position) < 20)
-                Bone.Create(
-                    Util.DirectionOf(of: player, relativeTo: gameObject),
-                    transform.position,
-                    transform.rotation
-                );
-                throwing = false;
+                if (Vector2.Distance(transform.position, player.transform.position) < 20) {
+                    Bone.Create(
+                        Util.DirectionOf(of: player.gameObject, relativeTo: gameObject),
+                        transform.position,
+                        transform.rotation
+                    );
+                    throwing = false;
+                }
             } else {
                 timesWaited++;
             }

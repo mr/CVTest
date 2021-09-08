@@ -18,7 +18,7 @@ public class Bat : MonoBehaviour, IEnemy {
     private Player player;
 
     void Start() {
-        player = Player.GetInstance();
+        player = Player.Instance;
     }
 
     void Update() {
@@ -26,9 +26,6 @@ public class Bat : MonoBehaviour, IEnemy {
         var pos = transform.position;
         var distanceX = Mathf.Abs(playerPos.x - pos.x);
         var distanceY = Mathf.Abs(playerPos.y - pos.y);
-
-        Debug.Log("Distance X: " + distanceX);
-        Debug.Log("Distance Y: " + distanceY);
 
         if (sleeping && distanceY > 2) {
             return;
