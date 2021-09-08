@@ -42,7 +42,7 @@ public class Bat : MonoBehaviour, IEnemy {
             sleeping = false;
             swoopAmplitude = distanceY;
             center = player.Bounds.center.y;
-            direction = Mathf.Sign(pos.x - playerPos.x);
+            direction = Mathf.Sign(playerPos.x - pos.x);
         }
 
         var newSwoopYPos =
