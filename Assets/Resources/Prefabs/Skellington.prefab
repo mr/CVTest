@@ -128,8 +128,10 @@ MonoBehaviour:
   moveSpeed: 4
   damage: 1
   bone: {fileID: 11495758, guid: 2b9be6ed2d99d624994de56c1f0d632a, type: 3}
+  turnsAroundRandomly: 1
   turnAroundWaitTime: 0.5
   turnAroundChance: 0.2
+  throwsBones: 1
   boneThrowWaitTime: 1
   boneThrowChance: 0.5
   boneThrowPauseTime: 0.2

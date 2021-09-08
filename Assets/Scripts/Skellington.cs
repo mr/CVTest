@@ -14,9 +14,11 @@ public class Skellington : MonoBehaviour, IEnemy {
     private float gravity = 0f;
     Vector3 velocity;
 
+    public bool turnsAroundRandomly;
     public float turnAroundWaitTime = 1f;
     public float turnAroundChance = 0.2f;
 
+    public bool throwsBones;
     public float boneThrowWaitTime = 1f;
     public float boneThrowChance = 0.2f;
     public float boneThrowPauseTime = 0.2f;
@@ -33,8 +35,12 @@ public class Skellington : MonoBehaviour, IEnemy {
     void Start() {
         controller = GetComponent<Controller2D>();
         velocity.x = moveSpeed;
-        StartCoroutine(TurnAround());
-        StartCoroutine(ThrowBones());
+        if (turnsAroundRandomly) {
+            StartCoroutine(TurnAround());
+        }
+        if (throwsBones) {
+            StartCoroutine(ThrowBones());
+        }
     }
 
     void Update() {
@@ -42,7 +48,7 @@ public class Skellington : MonoBehaviour, IEnemy {
             gravity = GameManager.Instance.PlayerGravity;
         }
 
-        if (throwing) {
+        if (throwing || Vector2.Distance(player.transform.position, transform.position) > 20) {
             velocity.x = 0;
         } else {
             velocity.x = moveSpeed;
