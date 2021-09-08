@@ -9,6 +9,8 @@ using System;
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour {
     public const string Tag = "Player";
+    public static Player GetInstance() =>
+        GameObject.FindGameObjectWithTag(Player.Tag).GetComponent<Player>();
 
     public LayerMask stairMask;
 
@@ -53,6 +55,7 @@ public class Player : MonoBehaviour {
 
     private SpriteRenderer spriteRenderer;
 
+    private IInputController inputController;
     private Vector2 directionalInput;
     private Vector2 DirectionalInput {
         set {
@@ -108,6 +111,9 @@ public class Player : MonoBehaviour {
         controller = GetComponent<Controller2D>();
         collider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        inputController = new CompositeInputController(
+            new GamepadInputController(Gamepad.current),
+            new KeyboardInputController(Keyboard.current));
         gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         recoilGravity = -(2 * recoilHeight) / Mathf.Pow(timeToRecoilApex, 2);
         jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -259,6 +265,10 @@ public class Player : MonoBehaviour {
         return new Vector2(bounds.center.x, bounds.min.y);
     }
 
+    public Bounds Bounds {
+        get => collider.bounds;
+    }
+
     private void SetPlayerBottom(Vector2 newPos) {
         var oldPos = transform.position;
         transform.position = new Vector3(newPos.x, newPos.y + collider.bounds.extents.y, oldPos.z);
@@ -324,19 +334,18 @@ public class Player : MonoBehaviour {
 
     private void GetInput() {
         var gamepad = Gamepad.current;
+        var keyboard = Keyboard.current;
 
-        // prioritize dpad :^)
-        var dpadLeft = -1 * gamepad.dpad.left.ReadValue();
-        var dpadRight = gamepad.dpad.right.ReadValue();
-        var dpadUp = gamepad.dpad.up.ReadValue();
-        var dpadDown = -1 * gamepad.dpad.down.ReadValue();
-        DirectionalInput = new Vector2(dpadLeft + dpadRight, dpadUp + dpadDown);
+        DirectionalInput =
+            new Vector2(
+                inputController.left + inputController.right,
+                inputController.up + inputController.down);
 
-        if (gamepad.aButton.wasPressedThisFrame) {
+        if (inputController.jump) {
             OnJumpInputDown();
         }
 
-        if (gamepad.xButton.wasPressedThisFrame) {
+        if (inputController.attack) {
             whip.DoWhip();
         }
     }
