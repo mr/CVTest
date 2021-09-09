@@ -113,8 +113,8 @@ public class Player : MonoBehaviour {
         collider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         inputController = new CompositeInputController(
-            new GamepadInputController(Gamepad.current),
-            new KeyboardInputController(Keyboard.current));
+            new GamepadInputController(),
+            new KeyboardInputController());
         gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         recoilGravity = -(2 * recoilHeight) / Mathf.Pow(timeToRecoilApex, 2);
         jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
