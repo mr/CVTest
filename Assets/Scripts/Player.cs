@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 using Enums;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,8 +103,6 @@ public class Player : MonoBehaviour {
 
     public Whip whip;
 
-    private Slider healthSlider;
-
     public SceneLoader.SceneLoader sceneLoader;
 
     void Start() {
@@ -120,7 +117,6 @@ public class Player : MonoBehaviour {
         jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         recoilVelocity = Mathf.Abs(recoilGravity) * timeToRecoilApex;
         GameManager.Instance.PlayerGravity = gravity;
-        healthSlider = GameObject.Find("HealthSlider").GetComponent<Slider>();
         health = maxHealth;
     }
 
@@ -294,7 +290,6 @@ public class Player : MonoBehaviour {
             if (health < 0) {
                 health = 0;
             }
-            healthSlider.value = health / (float) maxHealth;
             // away from the enemy
             enemyHitDirection = Util.DirectionOf(gameObject, other.gameObject);
             invulnerabilityDurationState = invulnerabilityDuration;

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 589120109029184602}
   - component: {fileID: 589120109029184605}
+  - component: {fileID: 6421957013138931589}
   m_Layer: 8
   m_Name: CameraBarrier Horizontal
   m_TagString: Horizontal
@@ -26,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 589120109029184604}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -13.5, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 16, z: 1}
+  m_LocalScale: {x: 1, y: 15, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -57,3 +58,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &6421957013138931589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 589120109029184604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efacdae8e25125948b6393c45e63b401, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
