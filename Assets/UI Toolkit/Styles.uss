@@ -1,0 +1,16 @@
+.panel {
+    background-color: rgba(0, 0, 0, 255);
+}
+
+.spacer {
+    flex-shrink: 0;
+    flex-grow: 1;
+}
+
+#topPanel {
+    height: 56px;
+}
+
+#bottomPanel {
+    height: 8px;
+}
