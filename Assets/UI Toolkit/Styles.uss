@@ -8,7 +8,7 @@
 }
 
 #topPanel {
-    height: 56px;
+    height: 32px;
 }
 
 #bottomPanel {

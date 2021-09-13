@@ -40,6 +40,121 @@
                 <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n1); width: 8px; height: 8px;" />
             </ui:VisualElement>
         </ui:VisualElement>
+        <ui:VisualElement name="lifeLine" class="container" style="flex-direction: row;">
+            <ui:VisualElement name="labelContainer" class="container">
+                <ui:VisualElement name="playerLabel" class="container" style="flex-direction: row;">
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_P); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_L); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_A); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_Y); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_E); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_R); width: 8px; height: 8px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="enemyLabel" class="container" style="flex-direction: row;">
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_E); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_N); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_E); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_M); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_Y); width: 8px; height: 8px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_space); width: 8px; height: 8px;" />
+            <ui:VisualElement name="lifeBarContainer" class="container">
+                <ui:VisualElement name="playerLifeBar" class="container" style="flex-direction: row;">
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="l" style="height: 1px;" />
+                <ui:VisualElement name="enemyLifeBar" class="container" style="flex-direction: row;">
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                    <ui:VisualElement name="l" style="background-color: rgba(255, 0, 0, 255); width: 3px; height: 7px;" />
+                    <ui:VisualElement name="l" style="width: 1px; height: 7px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="l" style="height: 1px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_space); width: 8px; height: 8px;" />
+            <ui:VisualElement name="subweaponContainer" class="container" style="background-color: rgba(255, 0, 0, 255); width: 32px; height: 24px; padding: 2px;">
+                <ui:VisualElement name="subweaponContainerInner" class="container" style="background-color: rgba(0, 0, 0, 255); flex-shrink: 0; flex-grow: 1;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_space); width: 8px; height: 8px;" />
+            <ui:VisualElement name="resourceContainer" class="container">
+                <ui:VisualElement name="heartResource" class="container" style="flex-direction: row;">
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_H); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_-); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="heartNumbers" class="container" style="flex-direction: row;">
+                        <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+                        <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="livesResource" class="container" style="flex-direction: row;">
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_P); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_-); width: 8px; height: 8px;" />
+                    <ui:VisualElement name="livesNumbers" class="container" style="flex-direction: row;">
+                        <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+                        <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n1); width: 8px; height: 8px;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="panelSpacer" class="spacer" />
     <ui:VisualElement name="bottomPanel" class="panel" />

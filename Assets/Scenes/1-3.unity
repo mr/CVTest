@@ -209,6 +209,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1856880131}
   m_RootOrder: 1
@@ -1463,7 +1464,7 @@ PrefabInstance:
     - target: {fileID: 5681480708040099178, guid: b6fd938740f3b4f47a0dce7694e1bbf3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 50
+      value: 48.5
       objectReference: {fileID: 0}
     - target: {fileID: 5681480708040099178, guid: b6fd938740f3b4f47a0dce7694e1bbf3,
         type: 3}
@@ -1532,7 +1533,7 @@ PrefabInstance:
     - target: {fileID: 589120109029184602, guid: 725072f024605074bb49602d36dfa8a0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 42
+      value: 41.5
       objectReference: {fileID: 0}
     - target: {fileID: 589120109029184602, guid: 725072f024605074bb49602d36dfa8a0,
         type: 3}
@@ -1685,6 +1686,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1856880131}
   m_RootOrder: 2
@@ -2322,7 +2324,7 @@ PrefabInstance:
     - target: {fileID: 589120109029184602, guid: 725072f024605074bb49602d36dfa8a0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 42
+      value: 41.5
       objectReference: {fileID: 0}
     - target: {fileID: 589120109029184602, guid: 725072f024605074bb49602d36dfa8a0,
         type: 3}
@@ -2399,6 +2401,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1856880131}
   m_RootOrder: 0
@@ -7024,7 +7027,7 @@ PrefabInstance:
     - target: {fileID: 5681480708040099178, guid: b6fd938740f3b4f47a0dce7694e1bbf3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 50
+      value: 48.5
       objectReference: {fileID: 0}
     - target: {fileID: 5681480708040099178, guid: b6fd938740f3b4f47a0dce7694e1bbf3,
         type: 3}
@@ -7467,6 +7470,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 937447207}
   - {fileID: 94127359}
