@@ -1,6 +1,46 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="Styles.uss" />
-    <ui:VisualElement name="topPanel" class="panel" />
+    <Style src="project://database/Assets/UI%20Toolkit/Styles.uss?fileID=7433441132597879392&amp;guid=5310ee2fdd7d479419cd6136d2f4ff17&amp;type=3#Styles" />
+    <ui:VisualElement name="topPanel" class="panel">
+        <ui:VisualElement name="scoreLine" class="container" style="flex-direction: row;">
+            <ui:VisualElement name="c" style="background-image: url(&apos;project://database/Assets/Sprites/Font/font.png?fileID=2899495915021055116&amp;guid=ab2cf0b7142e37e419535321f19350d4&amp;type=3#font_S&apos;); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(&apos;project://database/Assets/Sprites/Font/font.png?fileID=-709423759446177439&amp;guid=ab2cf0b7142e37e419535321f19350d4&amp;type=3#font_C&apos;); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(&apos;project://database/Assets/Sprites/Font/font.png?fileID=6527646700352533528&amp;guid=ab2cf0b7142e37e419535321f19350d4&amp;type=3#font_O&apos;); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(&apos;project://database/Assets/Sprites/Font/font.png?fileID=1449393785630073951&amp;guid=ab2cf0b7142e37e419535321f19350d4&amp;type=3#font_R&apos;); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(&apos;project://database/Assets/Sprites/Font/font.png?fileID=-5960133942905756824&amp;guid=ab2cf0b7142e37e419535321f19350d4&amp;type=3#font_E&apos;); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(&apos;project://database/Assets/Sprites/Font/font.png?fileID=151536616992836487&amp;guid=ab2cf0b7142e37e419535321f19350d4&amp;type=3#font_-&apos;); width: 8px; height: 8px;" />
+            <ui:VisualElement name="scoreNumbers" class="container" style="flex-direction: row;">
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_space); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_T); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_I); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_M); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_E); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_space); width: 8px; height: 8px;" />
+            <ui:VisualElement name="timeNumbers" class="container" style="flex-direction: row;">
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_space); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_B); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_L); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_K); width: 8px; height: 8px;" />
+            <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_space); width: 8px; height: 8px;" />
+            <ui:VisualElement name="stageName" class="container" style="flex-direction: row;">
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n1); width: 8px; height: 8px;" />
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_-); width: 8px; height: 8px;" />
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n0); width: 8px; height: 8px;" />
+                <ui:VisualElement name="c" style="background-image: url(/Assets/Sprites/Font/font.png#font_n1); width: 8px; height: 8px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
     <ui:VisualElement name="panelSpacer" class="spacer" />
     <ui:VisualElement name="bottomPanel" class="panel" />
 </ui:UXML>
