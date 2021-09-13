@@ -1,6 +1,9 @@
 using UnityEngine;
 
 public class CameraBarrier : MonoBehaviour {
+
+    public bool switcher = false;
+
     void Start() { }
 
     void Update() { }

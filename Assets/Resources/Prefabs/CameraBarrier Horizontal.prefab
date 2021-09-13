@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 589120109029184602}
   - component: {fileID: 589120109029184605}
   - component: {fileID: 6421957013138931589}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: CameraBarrier Horizontal
   m_TagString: Horizontal
   m_Icon: {fileID: 0}
@@ -70,3 +70,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efacdae8e25125948b6393c45e63b401, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  switcher: 0

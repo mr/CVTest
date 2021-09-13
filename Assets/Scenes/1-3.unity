@@ -1579,6 +1579,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CameraBarrier (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 6421957013138931589, guid: 725072f024605074bb49602d36dfa8a0,
+        type: 3}
+      propertyPath: switcher
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 725072f024605074bb49602d36dfa8a0, type: 3}
 --- !u!1001 &657041607
@@ -7001,6 +7006,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2299944012942356149, guid: b6fd938740f3b4f47a0dce7694e1bbf3,
+        type: 3}
+      propertyPath: switcher
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5681480708040099178, guid: b6fd938740f3b4f47a0dce7694e1bbf3,
         type: 3}
       propertyPath: m_RootOrder

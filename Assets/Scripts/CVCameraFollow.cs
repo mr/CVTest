@@ -16,35 +16,50 @@ public class CVCameraFollow : MonoBehaviour {
     new Camera camera;
 
     public enum FollowMode {
-        Horizontal, Vertical, None
+        Horizontal, Vertical
     }
 
     public FollowMode followMode = FollowMode.Horizontal;
 
-    private bool movedBefore = false;
+    private bool stopped = false;
 
     void Start() {
         camera = GetComponent<Camera>();
     }
 
     void LateUpdate() {
-        if (!sceneLoader.ready) {
+        if (!sceneLoader.ready || stopped) {
             return;
         }
 
+        var bounds = OrthographicBounds(camera);
+
         var direction = Vector2.zero;
         var targetDistance = 0f;
+        var origin = Vector2.zero;
+        var targetDistanceSign = 1f;
         if (followMode == FollowMode.Horizontal) {
             direction = Vector2.right;
             targetDistance = target.transform.position.x - transform.position.x ;
+            targetDistanceSign = Mathf.Sign(targetDistance);
+            origin =
+                targetDistanceSign == -1
+                    ? new Vector2(
+                        bounds.center.x - bounds.extents.x, bounds.center.y)
+                    : new Vector2(
+                        bounds.center.x + bounds.extents.x, bounds.center.y);
         } else if (followMode == FollowMode.Vertical) {
             direction = Vector2.up;
             targetDistance = target.transform.position.y - transform.position.y ;
+            targetDistanceSign = Mathf.Sign(targetDistance);
+            origin =
+                targetDistanceSign == -1
+                    ? new Vector2(
+                        bounds.center.x, bounds.center.y - bounds.extents.y)
+                    : new Vector2(
+                        bounds.center.x, bounds.center.y + bounds.extents.y);
         }
 
-        var targetDistanceSign = Mathf.Sign(targetDistance);
-        var bounds = OrthographicBounds(camera);
-        var origin = targetDistanceSign == -1 ? bounds.min : bounds.max;
         var hits =
             from hit in Physics2D.RaycastAll(
                 origin, direction * targetDistanceSign, Mathf.Infinity, collisionMask)
@@ -55,27 +70,18 @@ public class CVCameraFollow : MonoBehaviour {
             select hit;
         var firstHit = hits.FirstOrDefault();
 
-        bool hitBarrier = false;
         var velocity = direction * targetDistance;
         if (firstHit) {
-            var hitDistance = firstHit.distance * velocity.normalized;
-            if (hitDistance.magnitude < velocity.magnitude) {
-                velocity = hitDistance;
-                hitBarrier = true;
-            }
-        }
-
-        if (hitBarrier) {
-            if (movedBefore) {
-                if (followMode == FollowMode.Horizontal) {
-                    followMode = FollowMode.Vertical;
-                } else if (followMode == FollowMode.Vertical) {
-                    followMode = FollowMode.Horizontal;
+            if (firstHit.distance < velocity.magnitude) {
+                velocity = firstHit.distance * velocity.normalized;
+                var barrier = firstHit.collider.gameObject.GetComponent<CameraBarrier>();
+                if (barrier.switcher) {
+                    if (followMode == FollowMode.Horizontal) {
+                        followMode = FollowMode.Vertical;
+                    } else {
+                        followMode = FollowMode.Horizontal;
+                    }
                 }
-                movedBefore = false;
-            }
-            if (velocity.magnitude != 0) {
-                movedBefore = true;
             }
         }
 

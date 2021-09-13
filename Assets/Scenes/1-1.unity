@@ -10975,6 +10975,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CameraBarrier (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6421957013138931589, guid: 725072f024605074bb49602d36dfa8a0,
+        type: 3}
+      propertyPath: switcher
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 725072f024605074bb49602d36dfa8a0, type: 3}
 --- !u!1001 &1589092118

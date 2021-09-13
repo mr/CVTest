@@ -45,7 +45,7 @@ public class Skellington : MonoBehaviour, IEnemy {
 
     void Update() {
         if (gravity == 0f) {
-            gravity = GameManager.Instance.PlayerGravity;
+            gravity = Player.Instance.Gravity;
         }
 
         if (throwing || Vector2.Distance(player.transform.position, transform.position) > 20) {

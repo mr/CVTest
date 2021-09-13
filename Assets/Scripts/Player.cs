@@ -44,6 +44,10 @@ public class Player : MonoBehaviour {
     }
 
     private float gravity;
+    public float Gravity {
+        get => gravity;
+    }
+
     private float jumpVelocity;
     private float recoilGravity;
     private float recoilVelocity;
@@ -116,7 +120,6 @@ public class Player : MonoBehaviour {
         recoilGravity = -(2 * recoilHeight) / Mathf.Pow(timeToRecoilApex, 2);
         jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         recoilVelocity = Mathf.Abs(recoilGravity) * timeToRecoilApex;
-        GameManager.Instance.PlayerGravity = gravity;
         health = maxHealth;
     }
 
